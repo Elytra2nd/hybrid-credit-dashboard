@@ -49,7 +49,16 @@ export default function ScoringModule() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await scoreDebtor(formData);
+      const payload: DebtorInputPayload = {
+        ...formData,
+        usia: Math.min(80, Math.max(18, Math.round(Number(formData.usia)))),
+        gaji_bersih_aktif: Math.max(0, Number(formData.gaji_bersih_aktif)),
+        estimasi_gaji_pensiun: Math.max(0, Number(formData.estimasi_gaji_pensiun)),
+        plafon_diminta: Math.max(1000000, Number(formData.plafon_diminta)),
+        tenor: Math.min(600, Math.max(1, Math.round(Number(formData.tenor)))),
+        dti_ratio: Math.min(0.95, Math.max(0.01, Number(formData.dti_ratio))),
+      };
+      const res = await scoreDebtor(payload);
       setScoreResult(res);
     } catch {
       alert("Terjadi kesalahan saat komputasi skor pada backend FastAPI.");

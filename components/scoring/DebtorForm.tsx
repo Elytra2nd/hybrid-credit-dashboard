@@ -66,7 +66,8 @@ export default function DebtorForm({
     const rateBulanan = rateTahunan / 12;
 
     const sisaBulanAktif = Math.max(12, (bup - usiaDisplay) * 12);
-    const tenorPensiun = Math.min(180, 240 - sisaBulanAktif);
+    const tenorPensiun = Math.max(1, Math.min(180, 240 - sisaBulanAktif));
+
 
     const angsuranPlafon1 =
       tenorPensiun > 0
@@ -130,27 +131,31 @@ export default function DebtorForm({
   // Sync computed DTI and Tenor to parent form payload
   useEffect(() => {
     if (isKapuasPlus && kapuasResult) {
+      const safeDti = Math.min(0.95, Math.max(0.01, parseFloat(kapuasResult.dtiAktifRatio.toFixed(4))));
+      const safeTenor = Math.max(1, Math.min(360, kapuasResult.tenorPensiunBulan));
       if (
-        formData.dti_ratio !== kapuasResult.dtiAktifRatio ||
-        formData.tenor !== kapuasResult.tenorPensiunBulan ||
+        formData.dti_ratio !== safeDti ||
+        formData.tenor !== safeTenor ||
         formData.plafon_diminta !== kapuasResult.totalPlafonKredit
       ) {
         onChange({
           ...formData,
-          dti_ratio: parseFloat(kapuasResult.dtiAktifRatio.toFixed(4)),
-          tenor: kapuasResult.tenorPensiunBulan,
+          dti_ratio: safeDti,
+          tenor: safeTenor,
           plafon_diminta: kapuasResult.totalPlafonKredit,
         });
       }
     } else if (isKuserna && kusernaResult) {
+      const safeDti = Math.min(0.95, Math.max(0.01, parseFloat(kusernaResult.dtiRatio.toFixed(4))));
+      const safeTenor = Math.max(1, Math.min(360, kusernaResult.tenorMaksimalBulan));
       if (
-        formData.dti_ratio !== kusernaResult.dtiRatio ||
-        formData.tenor !== kusernaResult.tenorMaksimalBulan
+        formData.dti_ratio !== safeDti ||
+        formData.tenor !== safeTenor
       ) {
         onChange({
           ...formData,
-          dti_ratio: parseFloat(kusernaResult.dtiRatio.toFixed(4)),
-          tenor: kusernaResult.tenorMaksimalBulan,
+          dti_ratio: safeDti,
+          tenor: safeTenor,
         });
       }
     }
