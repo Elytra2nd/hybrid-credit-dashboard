@@ -49,7 +49,7 @@ export default function NplProjectionLine({
       </div>
 
       {/* Chart */}
-      <div className="h-64 w-full">
+      <div className="h-[240px] sm:h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={timeSeries}
@@ -64,6 +64,7 @@ export default function NplProjectionLine({
               tick={{ fontSize: 10, fill: isLight ? "#64748B" : "#94A3B8" }}
               tickLine={false}
               axisLine={{ stroke: isLight ? "#CBD5E1" : "#1E293B" }}
+              minTickGap={20}
             />
             <YAxis
               domain={[0, 6]}

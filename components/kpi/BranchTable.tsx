@@ -40,15 +40,15 @@ export default function BranchTable({ branches }: BranchTableProps) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto max-h-[280px] overflow-y-auto">
+      <div className="w-full overflow-x-auto rounded-lg border border-[var(--divider)] max-h-[300px] overflow-y-auto">
         <table className="w-full text-left text-xs text-[var(--text-secondary)]">
-          <thead className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] sticky top-0 bg-[var(--card-bg)] z-10">
+          <thead className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] sticky top-0 bg-[var(--card-bg)] z-20">
             <tr>
-              <th className="py-2 px-2 w-8">#</th>
-              <th className="py-2 px-2">Kantor Cabang</th>
-              <th className="py-2 px-2 text-right">Debitur</th>
-              <th className="py-2 px-2 text-right">Porsi</th>
-              <th className="py-2 px-2 w-1/3">Distribusi</th>
+              <th className="py-2.5 px-3 w-8">#</th>
+              <th className="py-2.5 px-3 sticky left-0 bg-[var(--card-bg)] z-10 whitespace-nowrap">Kantor Cabang</th>
+              <th className="py-2.5 px-3 text-right whitespace-nowrap">Debitur</th>
+              <th className="py-2.5 px-3 text-right whitespace-nowrap">Porsi</th>
+              <th className="py-2.5 px-3 w-1/3 min-w-[120px] hidden sm:table-cell">Distribusi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--divider)]">
@@ -59,7 +59,7 @@ export default function BranchTable({ branches }: BranchTableProps) {
                 style={{ animationDelay: `${idx * 40}ms` }}
               >
                 {/* Rank badge */}
-                <td className="py-2.5 px-2">
+                <td className="py-2.5 px-3 whitespace-nowrap">
                   <span
                     className={cn(
                       "inline-flex items-center justify-center size-5 rounded text-[10px] font-black text-white",
@@ -71,7 +71,7 @@ export default function BranchTable({ branches }: BranchTableProps) {
                 </td>
 
                 {/* Branch name */}
-                <td className="py-2.5 px-2">
+                <td className="py-2.5 px-3 sticky left-0 bg-[var(--card-bg)] group-hover:bg-[var(--surface-subtle)] transition-colors z-10 whitespace-nowrap">
                   <div className="flex items-center gap-1.5">
                     <MapPin className="size-3 text-[var(--text-muted)] shrink-0 group-hover:text-[var(--brand)] transition-colors" />
                     <span className="font-semibold text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors text-[11px]">
@@ -81,17 +81,17 @@ export default function BranchTable({ branches }: BranchTableProps) {
                 </td>
 
                 {/* Debitur */}
-                <td className="py-2.5 px-2 text-right text-[var(--text-muted)] font-medium tabular-nums">
+                <td className="py-2.5 px-3 text-right text-[var(--text-muted)] font-medium tabular-nums whitespace-nowrap">
                   {formatNumber(branch.total_debitur, 0)}
                 </td>
 
                 {/* Porsi % */}
-                <td className="py-2.5 px-2 text-right font-bold text-[var(--brand)] tabular-nums">
+                <td className="py-2.5 px-3 text-right font-bold text-[var(--brand)] tabular-nums whitespace-nowrap">
                   {formatPercent(branch.persentase_portofolio, 2)}
                 </td>
 
                 {/* Progress bar */}
-                <td className="py-2.5 px-2">
+                <td className="py-2.5 px-3 hidden sm:table-cell">
                   <div className="w-full bg-[var(--surface-subtle)] h-1.5 rounded-full overflow-hidden border border-[var(--divider)]">
                     <div
                       className="bg-[var(--brand)] h-full rounded-full animate-fill-bar"

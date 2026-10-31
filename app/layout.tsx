@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="id"
-      className="h-full antialiased"
+      className="h-full antialiased font-sans"
       suppressHydrationWarning
     >
       <head>

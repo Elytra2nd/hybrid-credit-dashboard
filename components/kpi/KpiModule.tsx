@@ -226,9 +226,9 @@ export default function KpiModule({ data }: KpiModuleProps) {
         </div>
 
         {/* Product slicer + Reset */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center bg-[var(--surface-subtle)] p-0.5 rounded border border-[var(--divider)] text-[10.5px] font-semibold">
-            <span className="text-[var(--text-muted)] px-2 flex items-center gap-1 text-[10px] font-bold tracking-wider">
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center bg-[var(--surface-subtle)] p-0.5 rounded border border-[var(--divider)] text-[10.5px] font-semibold overflow-x-auto max-w-full">
+            <span className="text-[var(--text-muted)] px-2 flex items-center gap-1 text-[10px] font-bold tracking-wider shrink-0">
               <Filter className="size-3 text-[var(--brand)]" />
               Produk:
             </span>
@@ -237,7 +237,7 @@ export default function KpiModule({ data }: KpiModuleProps) {
                 key={id}
                 onClick={() => setSliceProduct(id)}
                 className={cn(
-                  "px-2.5 py-0.5 rounded transition font-bold",
+                  "px-2.5 py-1 sm:py-0.5 rounded transition font-bold whitespace-nowrap min-h-8 sm:min-h-0",
                   sliceProduct === id
                     ? "bg-[var(--brand)] text-white shadow-sm"
                     : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -251,10 +251,10 @@ export default function KpiModule({ data }: KpiModuleProps) {
           <button
             onClick={handleResetOlap}
             title="Reset seluruh filter & kubus OLAP"
-            className="text-[10px] font-semibold px-2 py-1 rounded bg-[var(--surface-subtle)] text-[var(--text-muted)] border border-[var(--divider)] hover:text-[var(--text-primary)] flex items-center gap-1 transition"
+            className="text-[10px] font-semibold px-2.5 py-1.5 sm:py-1 rounded bg-[var(--surface-subtle)] text-[var(--text-muted)] border border-[var(--divider)] hover:text-[var(--text-primary)] flex items-center gap-1 transition min-h-8 sm:min-h-0"
           >
             <RotateCw className="size-3 text-[var(--brand)]" />
-            <span className="hidden sm:inline">Reset</span>
+            <span className="inline">Reset</span>
           </button>
         </div>
       </div>
@@ -263,19 +263,19 @@ export default function KpiModule({ data }: KpiModuleProps) {
       <KpiMetricCards data={data} dynamicMetrics={dynamicMetrics} />
 
       {/* 3. OLAP Control Ribbon */}
-      <div className="card rounded-lg p-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 text-xs">
+      <div className="card rounded-lg p-2.5 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs">
 
         {/* Region filter (Dice) */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 bg-[var(--surface-subtle)] px-2.5 py-1 rounded border border-[var(--divider)]">
-            <span className="text-[var(--text-muted)] text-[10.5px] font-semibold flex items-center gap-1">
-              <Sliders className="size-3 text-[var(--brand)]" />
+        <div className="flex items-center gap-2 flex-wrap w-full md:w-auto">
+          <div className="flex items-center gap-1.5 bg-[var(--surface-subtle)] px-2.5 py-1.5 rounded border border-[var(--divider)] w-full sm:w-auto min-h-10 sm:min-h-0">
+            <span className="text-[var(--text-muted)] text-[11px] sm:text-[10.5px] font-semibold flex items-center gap-1 shrink-0">
+              <Sliders className="size-3.5 sm:size-3 text-[var(--brand)]" />
               <span>Filter Wilayah:</span>
             </span>
             <select
               value={diceWilayah}
               onChange={(e) => setDiceWilayah(e.target.value)}
-              className="h-6 bg-transparent text-[10.5px] text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
+              className="h-full bg-transparent text-sm sm:text-[10.5px] text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer flex-1"
             >
               <option value="all">Semua Wilayah (Kalbar)</option>
               <option value="Wilayah I (Pontianak Raya)">Wilayah I (Pontianak Raya)</option>
@@ -287,7 +287,7 @@ export default function KpiModule({ data }: KpiModuleProps) {
           {diceWilayah !== "all" && (
             <button
               onClick={() => setDiceWilayah("all")}
-              className="text-[10px] text-[var(--brand)] hover:underline font-semibold"
+              className="text-xs sm:text-[10px] text-[var(--brand)] hover:underline font-semibold"
             >
               Reset Wilayah
             </button>
@@ -295,13 +295,13 @@ export default function KpiModule({ data }: KpiModuleProps) {
         </div>
 
         {/* View switcher */}
-        <div className="flex items-center bg-[var(--surface-subtle)] p-0.5 rounded border border-[var(--divider)] text-[10.5px] font-semibold shrink-0">
+        <div className="flex items-center bg-[var(--surface-subtle)] p-0.5 rounded border border-[var(--divider)] text-[11px] sm:text-[10.5px] font-semibold overflow-x-auto w-full md:w-auto">
           {views.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               onClick={() => setActiveView(id)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded transition",
+                "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-2 sm:py-1.5 rounded transition whitespace-nowrap min-h-10 sm:min-h-0",
                 activeView === id
                   ? "bg-[var(--brand)] text-white shadow-sm font-bold"
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -474,34 +474,34 @@ export default function KpiModule({ data }: KpiModuleProps) {
           </div>
 
           {/* Pivot Table */}
-          <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
+          <div className="w-full overflow-x-auto rounded-lg border border-[var(--divider)] max-h-[320px] overflow-y-auto">
             <table className="w-full text-left text-xs text-[var(--text-secondary)]">
-              <thead className="bg-[var(--surface-subtle)] text-[10px] font-bold text-[var(--text-muted)] border-b border-[var(--divider)] sticky top-0 z-10">
+              <thead className="bg-[var(--surface-subtle)] text-[10px] font-bold text-[var(--text-muted)] border-b border-[var(--divider)] sticky top-0 z-20">
                 <tr>
-                  <th className="py-2 px-3">Entitas Geografis</th>
-                  <th className="py-2 px-3 text-right tabular-nums">Penyaluran (Rp M)</th>
-                  <th className="py-2 px-3 text-right tabular-nums">Debitur</th>
-                  <th className="py-2 px-3 text-right tabular-nums">NPL (%)</th>
+                  <th className="py-2.5 px-3 sticky left-0 bg-[var(--surface-subtle)] z-10 whitespace-nowrap">Entitas Geografis</th>
+                  <th className="py-2.5 px-3 text-right tabular-nums whitespace-nowrap">Penyaluran (Rp M)</th>
+                  <th className="py-2.5 px-3 text-right tabular-nums whitespace-nowrap">Debitur</th>
+                  <th className="py-2.5 px-3 text-right tabular-nums whitespace-nowrap">NPL (%)</th>
                   {pivotMode === "kolektibilitas" && (
                     <>
-                      <th className="py-2 px-3 text-right text-emerald-600 dark:text-emerald-400">Kol 1 Lancar</th>
-                      <th className="py-2 px-3 text-right text-amber-600 dark:text-amber-400">Kol 2 DPK</th>
-                      <th className="py-2 px-3 text-right text-rose-600 dark:text-rose-400">Kol 3-5 NPL</th>
+                      <th className="py-2.5 px-3 text-right text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Kol 1 Lancar</th>
+                      <th className="py-2.5 px-3 text-right text-amber-600 dark:text-amber-400 whitespace-nowrap">Kol 2 DPK</th>
+                      <th className="py-2.5 px-3 text-right text-rose-600 dark:text-rose-400 whitespace-nowrap">Kol 3-5 NPL</th>
                     </>
                   )}
                   {pivotMode === "produk" && (
                     <>
-                      <th className="py-2 px-3 text-right text-[var(--brand)]">Kapuas Plus (M)</th>
-                      <th className="py-2 px-3 text-right text-[var(--navy-400)]">Kuserna (M)</th>
+                      <th className="py-2.5 px-3 text-right text-[var(--brand)] whitespace-nowrap">Kapuas Plus (M)</th>
+                      <th className="py-2.5 px-3 text-right text-[var(--navy-400)] whitespace-nowrap">Kuserna (M)</th>
                     </>
                   )}
                   {pivotMode === "historis" && (
                     <>
-                      <th className="py-2 px-2.5 text-right tabular-nums">2020</th>
-                      <th className="py-2 px-2.5 text-right tabular-nums">2021</th>
-                      <th className="py-2 px-2.5 text-right tabular-nums">2022</th>
-                      <th className="py-2 px-2.5 text-right tabular-nums">2023</th>
-                      <th className="py-2 px-2.5 text-right tabular-nums text-[var(--brand)]">2024</th>
+                      <th className="py-2.5 px-2.5 text-right tabular-nums whitespace-nowrap">2020</th>
+                      <th className="py-2.5 px-2.5 text-right tabular-nums whitespace-nowrap">2021</th>
+                      <th className="py-2.5 px-2.5 text-right tabular-nums whitespace-nowrap">2022</th>
+                      <th className="py-2.5 px-2.5 text-right tabular-nums whitespace-nowrap">2023</th>
+                      <th className="py-2.5 px-2.5 text-right tabular-nums text-[var(--brand)] whitespace-nowrap">2024</th>
                     </>
                   )}
                 </tr>

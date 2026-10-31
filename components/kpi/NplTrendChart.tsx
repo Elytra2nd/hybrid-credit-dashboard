@@ -97,8 +97,8 @@ export default function NplTrendChart({ data, currentNpl }: NplTrendChartProps) 
       </div>
 
       {/* Chart */}
-      <div className="w-full">
-        <ResponsiveContainer width="100%" height={200}>
+      <div className="w-full h-[240px] sm:h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={filteredData} margin={{ top: 6, right: 8, left: -22, bottom: 0 }}>
             <defs>
               <linearGradient id="gradHistorical" x1="0" y1="0" x2="0" y2="1">
@@ -117,7 +117,7 @@ export default function NplTrendChart({ data, currentNpl }: NplTrendChartProps) 
               tick={{ fontSize: 10, fill: axisColor }}
               tickLine={false}
               axisLine={{ stroke: axisStroke }}
-              interval={11}
+              minTickGap={20}
             />
             <YAxis
               tick={{ fontSize: 10, fill: axisColor }}

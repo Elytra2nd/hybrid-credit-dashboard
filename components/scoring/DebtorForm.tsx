@@ -24,7 +24,7 @@ interface DebtorFormProps {
 }
 
 const inputBase =
-  "w-full px-2.5 py-1.5 bg-[var(--surface-input)] border border-[var(--card-border)] rounded text-[var(--text-primary)] text-xs focus:outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/10 transition";
+  "w-full px-3 py-2 min-h-10 sm:min-h-8 bg-[var(--surface-input)] border border-[var(--card-border)] rounded-md text-[var(--text-primary)] text-base sm:text-xs focus:outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/10 transition";
 
 export default function DebtorForm({
   formData,
@@ -436,7 +436,7 @@ export default function DebtorForm({
         <button
           type="submit"
           disabled={loading}
-          className="w-full mt-1 btn-primary py-2.5 px-4 rounded-md flex items-center justify-center gap-2 text-xs"
+          className="w-full mt-2 btn-primary py-3 sm:py-2.5 min-h-11 sm:min-h-9 px-4 rounded-md flex items-center justify-center gap-2 text-sm sm:text-xs font-semibold cursor-pointer"
         >
           <Calculator className="size-4" />
           <span>{loading ? "Menghitung Skor..." : "Hitung Skor Kredit FICO Hibrida"}</span>

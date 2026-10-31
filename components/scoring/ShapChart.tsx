@@ -36,12 +36,12 @@ export default function ShapChart({ contributions }: ShapChartProps) {
         </p>
       </div>
 
-      <div className="h-52 w-full">
+      <div className="h-56 sm:h-52 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             layout="vertical"
             data={contributions}
-            margin={{ top: 4, right: 24, left: 80, bottom: 0 }}
+            margin={{ top: 4, right: 16, left: 0, bottom: 0 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -58,7 +58,7 @@ export default function ShapChart({ contributions }: ShapChartProps) {
               type="category"
               dataKey="feature_label"
               tick={{ fontSize: 10, fill: isLight ? "#334155" : "#94A3B8" }}
-              width={140}
+              width={115}
               axisLine={{ stroke: isLight ? "#E2E8F0" : "#1E293B" }}
             />
             <Tooltip
