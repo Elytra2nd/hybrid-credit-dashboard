@@ -9,9 +9,11 @@ import {
   Calculator,
   CheckCircle2,
   AlertTriangle,
+  CreditCard,
 } from "lucide-react";
 import { DebtorInputPayload } from "@/types";
 import { formatRupiah, formatPercent } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface DebtorFormProps {
   formData: DebtorInputPayload;
@@ -21,6 +23,9 @@ interface DebtorFormProps {
   onApplyPreset: (type: "prime" | "risky") => void;
 }
 
+const inputBase =
+  "w-full px-2.5 py-1.5 bg-[var(--surface-input)] border border-[var(--card-border)] rounded text-[var(--text-primary)] text-xs focus:outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/10 transition";
+
 export default function DebtorForm({
   formData,
   onChange,
@@ -28,9 +33,8 @@ export default function DebtorForm({
   loading,
 }: DebtorFormProps) {
   const isKapuasPlus = formData.jenis_produk === "Kapuas Plus (Kredit ASN)";
-  const isKuserna = formData.jenis_produk === "Kuserna (Serbaguna)";
+  const isKuserna    = formData.jenis_produk === "Kuserna (Serbaguna)";
 
-  // Internal interactive state
   const [tanggalLahir, setTanggalLahir] = useState<string>("1970-02-08");
   const [bup, setBup] = useState<number>(58);
   const [plafon1Pemohon, setPlafon1Pemohon] = useState<number>(120000000);
@@ -38,458 +42,311 @@ export default function DebtorForm({
   const [bulanRitensi, setBulanRitensi] = useState<number>(21);
   const [pelunasan1, setPelunasan1] = useState<number>(0);
 
-  // Auto calculate age
   const usiaDisplay = useMemo(() => {
     if (!tanggalLahir) return 56;
     const birth = new Date(tanggalLahir);
-    const now = new Date();
+    const now   = new Date();
     let age = now.getFullYear() - birth.getFullYear();
     const m = now.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
-      age--;
-    }
+    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
     return Math.max(21, Math.min(75, age));
   }, [tanggalLahir]);
 
-  // Sync auto age to parent
   useEffect(() => {
     if (formData.usia !== usiaDisplay) {
       onChange({ ...formData, usia: usiaDisplay });
     }
   }, [usiaDisplay]);
 
-  // Real-time Kapuas Plus mathematical engine
   const kapuasResult = useMemo(() => {
     if (!isKapuasPlus) return null;
-
-    const rateTahunan = 0.125;
-    const rateBulanan = rateTahunan / 12;
-
-    const sisaBulanAktif = Math.max(12, (bup - usiaDisplay) * 12);
-    const tenorPensiun = Math.max(1, Math.min(180, 240 - sisaBulanAktif));
-
-
+    const rateBulanan = 0.125 / 12;
+    const sisaBulanAktif  = Math.max(12, (bup - usiaDisplay) * 12);
+    const tenorPensiun    = Math.max(1, Math.min(180, 240 - sisaBulanAktif));
     const angsuranPlafon1 =
       tenorPensiun > 0
         ? (plafon1Pemohon * rateBulanan) / (1 - Math.pow(1 + rateBulanan, -tenorPensiun))
         : 0;
-
     const angsuranPlafon2 =
       sisaBulanAktif > 0 && plafon2Pemohon > 0
         ? (plafon2Pemohon * rateBulanan) / (1 - Math.pow(1 + rateBulanan, -sisaBulanAktif))
         : 0;
-
     const totalAngsuranAktif = angsuranPlafon1 + angsuranPlafon2;
     const dtiAktif = formData.gaji_bersih_aktif > 0 ? totalAngsuranAktif / formData.gaji_bersih_aktif : 0.35;
-
     const totalPlafon = plafon1Pemohon + plafon2Pemohon;
-    const ritensiNominal = angsuranPlafon1 * (bulanRitensi || 21);
+    const ritensiNominal    = angsuranPlafon1 * (bulanRitensi || 21);
     const biayaAdminAsuransi = totalPlafon * 0.035;
     const pencairanDiterima = Math.max(0, totalPlafon - ritensiNominal - pelunasan1 - biayaAdminAsuransi);
-
-    return {
-      tenorPensiunBulan: tenorPensiun,
-      sisaBulanAktif: sisaBulanAktif,
-      angsuranPlafon1: angsuranPlafon1,
-      angsuranPlafon2: angsuranPlafon2,
-      totalAngsuranAktif: totalAngsuranAktif,
-      dtiAktifRatio: dtiAktif,
-      totalPlafonKredit: totalPlafon,
-      totalPencairanDiterima: pencairanDiterima,
-    };
+    return { tenorPensiunBulan: tenorPensiun, sisaBulanAktif, angsuranPlafon1, angsuranPlafon2, totalAngsuranAktif, dtiAktifRatio: dtiAktif, totalPlafonKredit: totalPlafon, totalPencairanDiterima: pencairanDiterima };
   }, [isKapuasPlus, bup, usiaDisplay, plafon1Pemohon, plafon2Pemohon, bulanRitensi, pelunasan1, formData.gaji_bersih_aktif]);
 
-  // Real-time Kuserna mathematical engine
   const kusernaResult = useMemo(() => {
     if (!isKuserna) return null;
-
-    const usiaMaksimal = 75;
-    const sisaTahun = Math.max(1, usiaMaksimal - usiaDisplay);
+    const sisaTahun = Math.max(1, 75 - usiaDisplay);
     const tenorMaksimalBulan = Math.min(180, sisaTahun * 12);
-
-    const rateTahunan = 0.115;
-    const rateBulanan = rateTahunan / 12;
-
+    const rateBulanan = 0.115 / 12;
     const angsuran =
       tenorMaksimalBulan > 0 && formData.plafon_diminta > 0
         ? (formData.plafon_diminta * rateBulanan) / (1 - Math.pow(1 + rateBulanan, -tenorMaksimalBulan))
         : 0;
-
     const dti = formData.estimasi_gaji_pensiun > 0 ? angsuran / formData.estimasi_gaji_pensiun : 0.35;
     const biayaAdminAsuransi = formData.plafon_diminta * 0.03;
-    const pencairanDiterima = Math.max(0, formData.plafon_diminta - pelunasan1 - biayaAdminAsuransi);
-
-    return {
-      tenorMaksimalBulan: tenorMaksimalBulan,
-      angsuranBulanan: angsuran,
-      dtiRatio: dti,
-      plafonTerpakai: formData.plafon_diminta,
-      totalPencairanDiterima: pencairanDiterima,
-    };
+    const pencairanDiterima  = Math.max(0, formData.plafon_diminta - pelunasan1 - biayaAdminAsuransi);
+    return { tenorMaksimalBulan, angsuranBulanan: angsuran, dtiRatio: dti, plafonTerpakai: formData.plafon_diminta, totalPencairanDiterima: pencairanDiterima };
   }, [isKuserna, usiaDisplay, formData.plafon_diminta, formData.estimasi_gaji_pensiun, pelunasan1]);
 
-  // Sync computed DTI and Tenor to parent form payload
   useEffect(() => {
     if (isKapuasPlus && kapuasResult) {
-      const safeDti = Math.min(0.95, Math.max(0.01, parseFloat(kapuasResult.dtiAktifRatio.toFixed(4))));
+      const safeDti   = Math.min(0.95, Math.max(0.01, parseFloat(kapuasResult.dtiAktifRatio.toFixed(4))));
       const safeTenor = Math.max(1, Math.min(360, kapuasResult.tenorPensiunBulan));
-      if (
-        formData.dti_ratio !== safeDti ||
-        formData.tenor !== safeTenor ||
-        formData.plafon_diminta !== kapuasResult.totalPlafonKredit
-      ) {
-        onChange({
-          ...formData,
-          dti_ratio: safeDti,
-          tenor: safeTenor,
-          plafon_diminta: kapuasResult.totalPlafonKredit,
-        });
+      if (formData.dti_ratio !== safeDti || formData.tenor !== safeTenor || formData.plafon_diminta !== kapuasResult.totalPlafonKredit) {
+        onChange({ ...formData, dti_ratio: safeDti, tenor: safeTenor, plafon_diminta: kapuasResult.totalPlafonKredit });
       }
     } else if (isKuserna && kusernaResult) {
-      const safeDti = Math.min(0.95, Math.max(0.01, parseFloat(kusernaResult.dtiRatio.toFixed(4))));
+      const safeDti   = Math.min(0.95, Math.max(0.01, parseFloat(kusernaResult.dtiRatio.toFixed(4))));
       const safeTenor = Math.max(1, Math.min(360, kusernaResult.tenorMaksimalBulan));
-      if (
-        formData.dti_ratio !== safeDti ||
-        formData.tenor !== safeTenor
-      ) {
-        onChange({
-          ...formData,
-          dti_ratio: safeDti,
-          tenor: safeTenor,
-        });
+      if (formData.dti_ratio !== safeDti || formData.tenor !== safeTenor) {
+        onChange({ ...formData, dti_ratio: safeDti, tenor: safeTenor });
       }
     }
   }, [kapuasResult, kusernaResult]);
 
   const handleProductChange = (prod: "Kapuas Plus (Kredit ASN)" | "Kuserna (Serbaguna)") => {
     if (prod === "Kapuas Plus (Kredit ASN)") {
-      setBup(58);
-      setPlafon1Pemohon(120000000);
-      setPlafon2Pemohon(0);
-      setBulanRitensi(21);
-      setTanggalLahir("1970-02-08");
-      onChange({
-        ...formData,
-        jenis_produk: prod,
-        jenis_pekerjaan: "PNS / ASN",
-        gaji_bersih_aktif: 5923400,
-        estimasi_gaji_pensiun: 4200000,
-        plafon_diminta: 120000000,
-        top_up: false,
-      });
+      setBup(58); setPlafon1Pemohon(120000000); setPlafon2Pemohon(0); setBulanRitensi(21); setTanggalLahir("1970-02-08");
+      onChange({ ...formData, jenis_produk: prod, jenis_pekerjaan: "PNS / ASN", gaji_bersih_aktif: 5923400, estimasi_gaji_pensiun: 4200000, plafon_diminta: 120000000, top_up: false });
     } else {
-      setBulanRitensi(4);
-      setTanggalLahir("1965-09-30");
-      onChange({
-        ...formData,
-        jenis_produk: prod,
-        jenis_pekerjaan: "Pensiunan",
-        estimasi_gaji_pensiun: 4400000,
-        gaji_bersih_aktif: 0,
-        plafon_diminta: 100000000,
-        top_up: false,
-      });
+      setBulanRitensi(4); setTanggalLahir("1965-09-30");
+      onChange({ ...formData, jenis_produk: prod, jenis_pekerjaan: "Pensiunan", estimasi_gaji_pensiun: 4400000, gaji_bersih_aktif: 0, plafon_diminta: 100000000, top_up: false });
     }
   };
 
   const applyProductPreset = (type: "prime" | "max_excel" | "risky") => {
     if (isKapuasPlus) {
       if (type === "prime") {
-        setTanggalLahir("1970-02-08");
-        setBup(58);
-        setPlafon1Pemohon(120000000);
-        setPlafon2Pemohon(0);
-        setBulanRitensi(21);
-        setPelunasan1(0);
-        onChange({
-          ...formData,
-          jenis_produk: "Kapuas Plus (Kredit ASN)",
-          jenis_pekerjaan: "PNS / ASN",
-          gaji_bersih_aktif: 5923400,
-          estimasi_gaji_pensiun: 4200000,
-          plafon_diminta: 120000000,
-          top_up: false,
-        });
+        setTanggalLahir("1970-02-08"); setBup(58); setPlafon1Pemohon(120000000); setPlafon2Pemohon(0); setBulanRitensi(21); setPelunasan1(0);
+        onChange({ ...formData, jenis_produk: "Kapuas Plus (Kredit ASN)", jenis_pekerjaan: "PNS / ASN", gaji_bersih_aktif: 5923400, estimasi_gaji_pensiun: 4200000, plafon_diminta: 120000000, top_up: false });
       } else if (type === "max_excel") {
-        setTanggalLahir("1970-02-08");
-        setBup(58);
-        setPlafon1Pemohon(337000000);
-        setPlafon2Pemohon(34000000);
-        setBulanRitensi(21);
-        setPelunasan1(0);
-        onChange({
-          ...formData,
-          jenis_produk: "Kapuas Plus (Kredit ASN)",
-          jenis_pekerjaan: "PNS / ASN",
-          gaji_bersih_aktif: 5923400,
-          estimasi_gaji_pensiun: 4200000,
-          plafon_diminta: 371000000,
-          top_up: false,
-        });
+        setTanggalLahir("1970-02-08"); setBup(58); setPlafon1Pemohon(337000000); setPlafon2Pemohon(34000000); setBulanRitensi(21); setPelunasan1(0);
+        onChange({ ...formData, jenis_produk: "Kapuas Plus (Kredit ASN)", jenis_pekerjaan: "PNS / ASN", gaji_bersih_aktif: 5923400, estimasi_gaji_pensiun: 4200000, plafon_diminta: 371000000, top_up: false });
       } else {
-        setTanggalLahir("1996-03-12");
-        setBup(58);
-        setPlafon1Pemohon(250000000);
-        setPlafon2Pemohon(100000000);
-        setBulanRitensi(21);
-        onChange({
-          ...formData,
-          jenis_produk: "Kapuas Plus (Kredit ASN)",
-          jenis_pekerjaan: "PNS / ASN",
-          gaji_bersih_aktif: 3800000,
-          estimasi_gaji_pensiun: 1800000,
-          plafon_diminta: 350000000,
-          top_up: true,
-        });
+        setTanggalLahir("1996-03-12"); setBup(58); setPlafon1Pemohon(250000000); setPlafon2Pemohon(100000000); setBulanRitensi(21);
+        onChange({ ...formData, jenis_produk: "Kapuas Plus (Kredit ASN)", jenis_pekerjaan: "PNS / ASN", gaji_bersih_aktif: 3800000, estimasi_gaji_pensiun: 1800000, plafon_diminta: 350000000, top_up: true });
       }
     } else {
       if (type === "prime") {
-        setTanggalLahir("1965-09-30");
-        setBulanRitensi(4);
-        setPelunasan1(0);
-        onChange({
-          ...formData,
-          jenis_produk: "Kuserna (Serbaguna)",
-          jenis_pekerjaan: "Pensiunan",
-          estimasi_gaji_pensiun: 4400000,
-          gaji_bersih_aktif: 0,
-          plafon_diminta: 100000000,
-          top_up: false,
-        });
+        setTanggalLahir("1965-09-30"); setBulanRitensi(4); setPelunasan1(0);
+        onChange({ ...formData, jenis_produk: "Kuserna (Serbaguna)", jenis_pekerjaan: "Pensiunan", estimasi_gaji_pensiun: 4400000, gaji_bersih_aktif: 0, plafon_diminta: 100000000, top_up: false });
       } else if (type === "max_excel") {
-        setTanggalLahir("1965-09-30");
-        setBulanRitensi(4);
-        setPelunasan1(0);
-        onChange({
-          ...formData,
-          jenis_produk: "Kuserna (Serbaguna)",
-          jenis_pekerjaan: "Pensiunan",
-          estimasi_gaji_pensiun: 4400000,
-          gaji_bersih_aktif: 0,
-          plafon_diminta: 321000000,
-          top_up: false,
-        });
+        setTanggalLahir("1965-09-30"); setBulanRitensi(4); setPelunasan1(0);
+        onChange({ ...formData, jenis_produk: "Kuserna (Serbaguna)", jenis_pekerjaan: "Pensiunan", estimasi_gaji_pensiun: 4400000, gaji_bersih_aktif: 0, plafon_diminta: 321000000, top_up: false });
       } else {
-        setTanggalLahir("1953-04-18");
-        setBulanRitensi(4);
-        onChange({
-          ...formData,
-          jenis_produk: "Kuserna (Serbaguna)",
-          jenis_pekerjaan: "Pensiunan",
-          estimasi_gaji_pensiun: 2200000,
-          gaji_bersih_aktif: 0,
-          plafon_diminta: 180000000,
-          top_up: true,
-        });
+        setTanggalLahir("1953-04-18"); setBulanRitensi(4);
+        onChange({ ...formData, jenis_produk: "Kuserna (Serbaguna)", jenis_pekerjaan: "Pensiunan", estimasi_gaji_pensiun: 2200000, gaji_bersih_aktif: 0, plafon_diminta: 180000000, top_up: true });
       }
     }
   };
 
+  const dtiClass = (dti: number) =>
+    dti <= 0.38
+      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20"
+      : dti <= 0.50
+      ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20"
+      : "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20";
+
   return (
-    <div className="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
-      {/* Header & Product Switcher */}
-      <div className="border-b border-slate-200 dark:border-white/5 pb-3 space-y-3">
-        {/* Title row */}
+    <div className="card rounded-lg p-4 space-y-4">
+
+      {/* Header */}
+      <div className="border-b border-[var(--divider)] pb-3 space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 whitespace-nowrap">
-            <UserCheck className="w-4 h-4 text-blue-500 dark:text-blue-400 shrink-0" />
+          <h3 className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
+            <UserCheck className="size-4 text-[var(--brand)] shrink-0" />
             Profil Calon Debitur
           </h3>
-          <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20 whitespace-nowrap">
+          <span className="text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)] px-2 py-0.5 rounded whitespace-nowrap">
             Input Simulasi
           </span>
         </div>
 
-        {/* Preset quick buttons - Clean 3-column Grid (No Overflow) */}
+        {/* Preset quick buttons */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-blue-500 dark:text-blue-400" />
-              Pilihan Preset Cepat:
-            </span>
-          </div>
+          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-1">
+            <Sparkles className="size-3 text-[var(--brand)]" />
+            Preset Cepat:
+          </span>
           <div className="grid grid-cols-3 gap-1.5">
             <button
               type="button"
               onClick={() => applyProductPreset("prime")}
-              className="text-[10.5px] font-bold px-2 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 flex items-center justify-center gap-1 transition shadow-sm"
-              title="Preset Pinjaman Prima Sehat (DTI ~23% -> Disetujui)"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center gap-1 transition"
+              title="Preset Prima Sehat (DTI ~23% → Disetujui)"
             >
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span className="truncate">Prima (Aman)</span>
+              <CheckCircle2 className="size-3.5 shrink-0" />
+              <span className="truncate">Prima</span>
             </button>
-
             <button
               type="button"
               onClick={() => applyProductPreset("max_excel")}
-              className="text-[10.5px] font-bold px-2 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center justify-center gap-1 transition shadow-sm"
-              title="Preset Plafon Maksimal Batas Excel (USEB / TIKA)"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-amber-500/10 hover:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/20 flex items-center justify-center gap-1 transition"
+              title="Preset Plafon Maksimal (USEB / TIKA)"
             >
-              <span className="truncate">Plafon Max</span>
+              <CreditCard className="size-3.5 shrink-0" />
+              <span className="truncate">Maks</span>
             </button>
-
             <button
               type="button"
               onClick={() => applyProductPreset("risky")}
-              className="text-[10.5px] font-bold px-2 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30 flex items-center justify-center gap-1 transition shadow-sm"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-rose-500/10 hover:bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/20 flex items-center justify-center gap-1 transition"
               title="Preset Pinjaman Berisiko Tinggi"
             >
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
-              <span className="truncate">Risiko Tinggi</span>
+              <AlertTriangle className="size-3.5 shrink-0" />
+              <span className="truncate">Risiko</span>
             </button>
           </div>
         </div>
 
-        {/* Product Type Tabs - High Contrast in Light & Dark Modes */}
-        <div className="grid grid-cols-2 gap-2 pt-0.5">
+        {/* Product tabs */}
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handleProductChange("Kapuas Plus (Kredit ASN)")}
-            className={`py-2 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+            className={cn(
+              "py-2 px-3 rounded text-xs font-semibold border flex items-center justify-center gap-1.5 transition",
               isKapuasPlus
-                ? "bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/25"
-                : "bg-slate-100 dark:bg-slate-900/60 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-200/70 dark:hover:bg-white/5"
-            }`}
+                ? "bg-[var(--brand)] text-white border-transparent shadow-sm"
+                : "bg-[var(--surface-subtle)] text-[var(--text-secondary)] border-[var(--divider)] hover:border-[var(--brand-border)]"
+            )}
           >
-            <Layers className={`w-3.5 h-3.5 ${isKapuasPlus ? "text-white" : "text-blue-500 dark:text-blue-400"}`} />
+            <Layers className={cn("size-3.5 shrink-0", isKapuasPlus ? "text-white" : "text-[var(--brand)]")} />
             <span>Kapuas Plus (ASN)</span>
           </button>
-
           <button
             type="button"
             onClick={() => handleProductChange("Kuserna (Serbaguna)")}
-            className={`py-2 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+            className={cn(
+              "py-2 px-3 rounded text-xs font-semibold border flex items-center justify-center gap-1.5 transition",
               isKuserna
-                ? "bg-cyan-600 text-white border-cyan-500 shadow-md shadow-cyan-500/25"
-                : "bg-slate-100 dark:bg-slate-900/60 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-200/70 dark:hover:bg-white/5"
-            }`}
+                ? "bg-[var(--brand)] text-white border-transparent shadow-sm"
+                : "bg-[var(--surface-subtle)] text-[var(--text-secondary)] border-[var(--divider)] hover:border-[var(--brand-border)]"
+            )}
           >
-            <Sparkles className={`w-3.5 h-3.5 ${isKuserna ? "text-white" : "text-cyan-500 dark:text-cyan-400"}`} />
+            <Sparkles className={cn("size-3.5 shrink-0", isKuserna ? "text-white" : "text-[var(--brand)]")} />
             <span>Kuserna (Pensiun)</span>
           </button>
         </div>
       </div>
 
-      {/* Form Controls */}
+      {/* Form controls */}
       <form onSubmit={onSubmit} className="space-y-3 text-xs">
+
         {/* Tanggal Lahir */}
-        <div className="p-3 bg-slate-50 dark:bg-[#0B0F19]/80 border border-slate-200 dark:border-white/5 rounded-xl flex items-center justify-between gap-3">
+        <div className="p-3 bg-[var(--surface-subtle)] border border-[var(--divider)] rounded flex items-center justify-between gap-3">
           <div className="flex-1">
-            <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1 mb-1">
-              <Calendar className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
+            <label className="text-[11px] font-semibold text-[var(--text-secondary)] flex items-center gap-1 mb-1">
+              <Calendar className="size-3.5 text-[var(--brand)]" />
               Tanggal Lahir Nasabah
             </label>
             <input
               type="date"
               value={tanggalLahir}
               onChange={(e) => setTanggalLahir(e.target.value)}
-              className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 focus:outline-none transition"
+              className={inputBase}
               required
             />
           </div>
-          <div className="text-right">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Usia Auto:</span>
-            <span className="font-bold text-cyan-600 dark:text-cyan-400 text-xs">{usiaDisplay} Thn</span>
+          <div className="text-right shrink-0">
+            <span className="text-[10px] text-[var(--text-muted)] block">Usia Auto:</span>
+            <span className="font-bold text-[var(--brand)] tabular-nums">{usiaDisplay} Thn</span>
           </div>
         </div>
 
-        {/* KAPUAS PLUS DUAL STAGE */}
+        {/* Kapuas Plus fields */}
         {isKapuasPlus && (
-          <div className="p-3 bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/20 rounded-xl space-y-2.5">
+          <div className="p-3 bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded space-y-2.5">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Batas Usia Pensiun (BUP)</label>
+                <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">BUP (Batas Usia Pensiun)</label>
                 <select
                   value={bup}
                   onChange={(e) => setBup(parseInt(e.target.value))}
-                  className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                  className={inputBase}
                 >
-                  <option value={58} className="bg-white dark:bg-[#0F172A]">58 Thn (Staff ASN)</option>
-                  <option value={60} className="bg-white dark:bg-[#0F172A]">60 Thn (Pejabat)</option>
-                  <option value={65} className="bg-white dark:bg-[#0F172A]">65 Thn (Fungsional)</option>
+                  <option value={58}>58 Thn (Staff ASN)</option>
+                  <option value={60}>60 Thn (Pejabat)</option>
+                  <option value={65}>65 Thn (Fungsional)</option>
                 </select>
               </div>
-
               <div>
-                <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Gaji Bersih Aktif (Rp)</label>
+                <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Gaji Bersih Aktif (Rp)</label>
                 <input
                   type="number"
                   step="50000"
                   value={formData.gaji_bersih_aktif}
                   onChange={(e) => onChange({ ...formData, gaji_bersih_aktif: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                  className={cn(inputBase, "tabular-nums")}
                   required
                 />
               </div>
             </div>
-
             <div>
-              <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Estimasi Gaji Pensiun (Rp)</label>
+              <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Estimasi Gaji Pensiun (Rp)</label>
               <input
                 type="number"
                 step="50000"
                 value={formData.estimasi_gaji_pensiun}
                 onChange={(e) => onChange({ ...formData, estimasi_gaji_pensiun: parseFloat(e.target.value) || 0 })}
-                className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                className={cn(inputBase, "tabular-nums")}
                 required
               />
             </div>
-
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Plafon 1 (Fase Pensiun)</label>
+                <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Plafon 1 – Fase Pensiun (Rp)</label>
                 <input
                   type="number"
                   step="1000000"
                   value={plafon1Pemohon}
                   onChange={(e) => setPlafon1Pemohon(parseFloat(e.target.value) || 0)}
-                  className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                  className={cn(inputBase, "tabular-nums")}
                 />
               </div>
-
               <div>
-                <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Plafon 2 (Tambahan Aktif)</label>
+                <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Plafon 2 – Tambahan Aktif (Rp)</label>
                 <input
                   type="number"
                   step="1000000"
                   value={plafon2Pemohon}
                   onChange={(e) => setPlafon2Pemohon(parseFloat(e.target.value) || 0)}
-                  className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                  className={cn(inputBase, "tabular-nums")}
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* KUSERNA SINGLE STAGE */}
+        {/* Kuserna fields */}
         {isKuserna && (
-          <div className="p-3 bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/20 rounded-xl space-y-2.5">
+          <div className="p-3 bg-amber-50/60 dark:bg-amber-950/15 border border-amber-200 dark:border-amber-500/20 rounded space-y-2.5">
             <div>
-              <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Gaji Pensiun Bulanan (Rp)</label>
+              <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Gaji Pensiun Bulanan (Rp)</label>
               <input
                 type="number"
                 step="50000"
                 value={formData.estimasi_gaji_pensiun}
-                onChange={(e) =>
-                  onChange({
-                    ...formData,
-                    estimasi_gaji_pensiun: parseFloat(e.target.value) || 0,
-                    gaji_bersih_aktif: 0,
-                  })
-                }
-                className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                onChange={(e) => onChange({ ...formData, estimasi_gaji_pensiun: parseFloat(e.target.value) || 0, gaji_bersih_aktif: 0 })}
+                className={cn(inputBase, "tabular-nums")}
                 required
               />
             </div>
-
             <div>
-              <label className="text-[11px] text-slate-700 dark:text-slate-300 block mb-1 font-medium">Plafon Pinjaman Diminta (Rp)</label>
+              <label className="text-[11px] text-[var(--text-secondary)] block mb-1 font-medium">Plafon Pinjaman Diminta (Rp)</label>
               <input
                 type="number"
                 step="1000000"
                 value={formData.plafon_diminta}
                 onChange={(e) => onChange({ ...formData, plafon_diminta: parseFloat(e.target.value) || 0 })}
-                className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+                className={cn(inputBase, "tabular-nums")}
                 required
               />
             </div>
@@ -499,106 +356,90 @@ export default function DebtorForm({
         {/* Ritensi & Pelunasan */}
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="text-[11px] text-slate-600 dark:text-slate-400 block mb-1 font-medium">Ritensi (Bln)</label>
+            <label className="text-[11px] text-[var(--text-muted)] block mb-1 font-medium">Ritensi (Bln)</label>
             <input
               type="number"
               value={bulanRitensi}
               onChange={(e) => setBulanRitensi(parseInt(e.target.value) || 0)}
-              className="w-full px-2 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+              className={cn(inputBase, "tabular-nums")}
             />
           </div>
           <div className="col-span-2">
-            <label className="text-[11px] text-slate-600 dark:text-slate-400 block mb-1 font-medium">Take Over / Pelunasan (Rp)</label>
+            <label className="text-[11px] text-[var(--text-muted)] block mb-1 font-medium">Take Over / Pelunasan (Rp)</label>
             <input
               type="number"
               step="1000000"
               value={pelunasan1}
               onChange={(e) => setPelunasan1(parseFloat(e.target.value) || 0)}
-              className="w-full px-2.5 py-1.5 bg-white dark:bg-[#131B2E] border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500/40 focus:outline-none"
+              className={cn(inputBase, "tabular-nums")}
             />
           </div>
         </div>
 
-        {/* Live Calculation Output Card */}
+        {/* Live Calc: Kapuas Plus */}
         {isKapuasPlus && kapuasResult && (
-          <div className="p-3 bg-blue-50/80 dark:bg-[#0B0F19]/90 border border-blue-200 dark:border-blue-500/30 rounded-xl space-y-1.5 text-[11px]">
-            <p className="font-bold text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-white/10 pb-1 flex justify-between">
-              <span>Simulasi Kapuas Plus:</span>
-              <span className="text-slate-900 dark:text-white font-semibold">Tenor {kapuasResult.tenorPensiunBulan} Bln</span>
+          <div className="p-3 bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded space-y-1.5 text-[11px]">
+            <p className="font-bold text-[var(--brand)] border-b border-[var(--divider)] pb-1 flex justify-between">
+              <span>Simulasi Kapuas Plus</span>
+              <span className="tabular-nums">Tenor {kapuasResult.tenorPensiunBulan} Bln</span>
             </p>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300">
+            <div className="flex justify-between text-[var(--text-secondary)]">
               <span>Total Plafon:</span>
-              <span className="font-bold text-blue-600 dark:text-cyan-300">{formatRupiah(kapuasResult.totalPlafonKredit)}</span>
+              <span className="font-bold text-[var(--brand)] tabular-nums">{formatRupiah(kapuasResult.totalPlafonKredit)}</span>
             </div>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300">
+            <div className="flex justify-between text-[var(--text-secondary)]">
               <span>Angsuran Aktif / Bln:</span>
-              <span className="font-semibold text-slate-900 dark:text-white">{formatRupiah(kapuasResult.totalAngsuranAktif)}</span>
+              <span className="font-semibold text-[var(--text-primary)] tabular-nums">{formatRupiah(kapuasResult.totalAngsuranAktif)}</span>
             </div>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300 items-center">
+            <div className="flex justify-between text-[var(--text-secondary)] items-center">
               <span>Rasio Beban Utang (DTI):</span>
-              <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${
-                kapuasResult.dtiAktifRatio <= 0.38
-                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"
-                  : kapuasResult.dtiAktifRatio <= 0.50
-                  ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30"
-                  : "bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30"
-              }`}>
-                {formatPercent(kapuasResult.dtiAktifRatio * 100, 1)} {kapuasResult.dtiAktifRatio <= 0.38 ? "(Aman & Sehat)" : "(Tinggi)"}
+              <span className={cn("font-bold px-1.5 py-0.5 rounded text-[10px] border tabular-nums", dtiClass(kapuasResult.dtiAktifRatio))}>
+                {formatPercent(kapuasResult.dtiAktifRatio * 100, 1)} {kapuasResult.dtiAktifRatio <= 0.38 ? "(Aman)" : "(Tinggi)"}
               </span>
             </div>
-            <div className="flex justify-between pt-1 border-t border-slate-200 dark:border-white/10 font-bold">
-              <span className="text-slate-700 dark:text-slate-300">Pencairan Diterima:</span>
-              <span className="text-emerald-600 dark:text-emerald-400">{formatRupiah(kapuasResult.totalPencairanDiterima)}</span>
+            <div className="flex justify-between pt-1 border-t border-[var(--divider)] font-bold">
+              <span className="text-[var(--text-secondary)]">Pencairan Diterima:</span>
+              <span className="text-emerald-600 dark:text-emerald-400 tabular-nums">{formatRupiah(kapuasResult.totalPencairanDiterima)}</span>
             </div>
           </div>
         )}
 
+        {/* Live Calc: Kuserna */}
         {isKuserna && kusernaResult && (
-          <div className="p-3 bg-amber-50/80 dark:bg-[#0B0F19]/90 border border-amber-200 dark:border-amber-500/30 rounded-xl space-y-1.5 text-[11px]">
-            <p className="font-bold text-amber-600 dark:text-amber-400 border-b border-slate-200 dark:border-white/10 pb-1 flex justify-between">
-              <span>Simulasi Kuserna:</span>
-              <span className="text-slate-900 dark:text-white font-semibold">Tenor {kusernaResult.tenorMaksimalBulan} Bln</span>
+          <div className="p-3 bg-amber-50/60 dark:bg-amber-950/15 border border-amber-200 dark:border-amber-500/20 rounded space-y-1.5 text-[11px]">
+            <p className="font-bold text-amber-700 dark:text-amber-400 border-b border-[var(--divider)] pb-1 flex justify-between">
+              <span>Simulasi Kuserna</span>
+              <span className="tabular-nums">Tenor {kusernaResult.tenorMaksimalBulan} Bln</span>
             </p>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300">
+            <div className="flex justify-between text-[var(--text-secondary)]">
               <span>Plafon Pinjaman:</span>
-              <span className="font-bold text-amber-600 dark:text-amber-300">{formatRupiah(kusernaResult.plafonTerpakai)}</span>
+              <span className="font-bold text-amber-700 dark:text-amber-300 tabular-nums">{formatRupiah(kusernaResult.plafonTerpakai)}</span>
             </div>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300">
+            <div className="flex justify-between text-[var(--text-secondary)]">
               <span>Angsuran Pensiun:</span>
-              <span className="font-semibold text-slate-900 dark:text-white">{formatRupiah(kusernaResult.angsuranBulanan)}</span>
+              <span className="font-semibold text-[var(--text-primary)] tabular-nums">{formatRupiah(kusernaResult.angsuranBulanan)}</span>
             </div>
-            <div className="flex justify-between text-slate-700 dark:text-slate-300 items-center">
+            <div className="flex justify-between text-[var(--text-secondary)] items-center">
               <span>Rasio Beban Utang (DTI):</span>
-              <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${
-                kusernaResult.dtiRatio <= 0.38
-                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"
-                  : kusernaResult.dtiRatio <= 0.50
-                  ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30"
-                  : "bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30"
-              }`}>
-                {formatPercent(kusernaResult.dtiRatio * 100, 1)} {kusernaResult.dtiRatio <= 0.38 ? "(Aman & Sehat)" : "(Tinggi)"}
+              <span className={cn("font-bold px-1.5 py-0.5 rounded text-[10px] border tabular-nums", dtiClass(kusernaResult.dtiRatio))}>
+                {formatPercent(kusernaResult.dtiRatio * 100, 1)} {kusernaResult.dtiRatio <= 0.38 ? "(Aman)" : "(Tinggi)"}
               </span>
             </div>
-            <div className="flex justify-between pt-1 border-t border-slate-200 dark:border-white/10 font-bold">
-              <span className="text-slate-700 dark:text-slate-300">Pencairan Diterima:</span>
-              <span className="text-emerald-600 dark:text-emerald-400">{formatRupiah(kusernaResult.totalPencairanDiterima)}</span>
+            <div className="flex justify-between pt-1 border-t border-[var(--divider)] font-bold">
+              <span className="text-[var(--text-secondary)]">Pencairan Diterima:</span>
+              <span className="text-emerald-600 dark:text-emerald-400 tabular-nums">{formatRupiah(kusernaResult.totalPencairanDiterima)}</span>
             </div>
           </div>
         )}
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 text-xs"
+          className="w-full mt-1 btn-primary py-2.5 px-4 rounded-md flex items-center justify-center gap-2 text-xs"
         >
-          {loading ? (
-            <span>Menghitung Skor...</span>
-          ) : (
-            <>
-              <Calculator className="w-4 h-4" />
-              <span>Hitung Skor Kredit FICO Hibrida</span>
-            </>
-          )}
+          <Calculator className="size-4" />
+          <span>{loading ? "Menghitung Skor..." : "Hitung Skor Kredit FICO Hibrida"}</span>
         </button>
       </form>
     </div>

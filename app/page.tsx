@@ -8,6 +8,7 @@ import ScoringModule from "@/components/scoring/ScoringModule";
 import StressTestModule from "@/components/stress-test/StressTestModule";
 import { fetchKpiSummary } from "@/lib/api";
 import { KpiSummaryData } from "@/types";
+import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "scoring" | "stress-test">("dashboard");
@@ -25,30 +26,31 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 relative overflow-hidden flex flex-col font-sans">
-      {/* Ambient Radial Mesh Background Glow (Dark Mode only) */}
-      <div className="hidden dark:block absolute -top-40 -left-40 w-96 h-96 bg-blue-600/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="hidden dark:block absolute top-1/3 -right-40 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[150px] pointer-events-none" />
-      <div className="hidden dark:block absolute -bottom-40 left-1/3 w-[600px] h-[600px] bg-blue-700/10 rounded-full blur-[180px] pointer-events-none" />
-
-      {/* 1. Header / Navbar */}
+    <div
+      className="min-h-screen flex flex-col font-sans"
+      style={{ backgroundColor: "var(--bg-main)", color: "var(--text-primary)" }}
+    >
+      {/* Top navbar: dark navy */}
       <Navbar />
 
-      {/* 2. Main Dashboard Window Layout (Left Sidebar + Right Content) */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Panel: Module Switcher (3 Kolom) */}
+      {/* Main layout */}
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+          {/* Sidebar (3 cols) */}
           <div className="lg:col-span-3">
             <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
 
-          {/* Right Panel: Dynamic Main Content Area (9 Kolom) */}
-          <main className="lg:col-span-9 space-y-4">
+          {/* Main content (9 cols) */}
+          <main className="lg:col-span-9 flex flex-col gap-4">
             {loading ? (
-              <div className="glass-card rounded-2xl flex items-center justify-center h-80">
+              <div className="card rounded-lg flex items-center justify-center h-72">
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-400 rounded-full animate-spin" />
-                  <p className="text-xs font-semibold text-slate-400">Memuat data analitis eksekutif...</p>
+                  <Loader2 className="size-8 text-[var(--brand)] animate-spin" />
+                  <p className="text-xs font-semibold text-[var(--text-muted)]">
+                    Memuat data analitis eksekutif...
+                  </p>
                 </div>
               </div>
             ) : (
@@ -62,11 +64,15 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 3. Footer */}
-      <footer className="py-4 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-white/5">
-        <p>
-          &copy; 2026 PT Bina Area Persada &bull; Bank Kalbar &bull; Kerangka Kerja CRISP-DM Machine Learning & OLAP
-        </p>
+      {/* Footer */}
+      <footer
+        className="py-4 text-center text-[11px] border-t"
+        style={{
+          color: "var(--text-muted)",
+          borderColor: "var(--divider)",
+        }}
+      >
+        &copy; 2026 PT Bina Area Persada &bull; Bank Kalbar &bull; Kerangka Kerja CRISP-DM Machine Learning &amp; OLAP
       </footer>
     </div>
   );

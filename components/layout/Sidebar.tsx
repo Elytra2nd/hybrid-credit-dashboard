@@ -3,103 +3,133 @@
 import React from "react";
 import {
   LayoutDashboard,
-  Database,
   UserCheck,
   TrendingUp,
   Activity,
+  Cpu,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   activeTab: "dashboard" | "scoring" | "stress-test";
   onTabChange: (tab: "dashboard" | "scoring" | "stress-test") => void;
 }
 
+const navItems = [
+  {
+    id: "dashboard" as const,
+    label: "Dashboard & OLAP",
+    sub: "KPI Eksekutif · Kubus Data",
+    icon: LayoutDashboard,
+  },
+  {
+    id: "scoring" as const,
+    label: "Scoring Debitur",
+    sub: "FICO Hibrida · SHAP Explainability",
+    icon: UserCheck,
+  },
+  {
+    id: "stress-test" as const,
+    label: "Stress Testing",
+    sub: "Prophet · Makro CPO",
+    icon: TrendingUp,
+  },
+];
+
 export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   return (
-    <aside className="space-y-4">
-      {/* 1. Quick Navigation Glass Card */}
-      <div className="glass-card rounded-2xl p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/5 pb-2">
-          <span className="text-xs font-bold text-slate-300 uppercase tracking-wider whitespace-nowrap">
-            Menu
+    <aside className="flex flex-col gap-3">
+
+      {/* ── Navigation Card ── */}
+      <div className="card p-3">
+        {/* Header */}
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--divider)]">
+          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">
+            Modul
           </span>
-          <span className="text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20 whitespace-nowrap">
-            3 Modul BI Terpadu
+          <span className="text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)] px-1.5 py-0.5 rounded">
+            3 Aktif
           </span>
         </div>
 
-        <div className="space-y-1.5">
-          <button
-            onClick={() => onTabChange("dashboard")}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all ${
-              activeTab === "dashboard"
-                ? "bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 shadow-sm dark:shadow-blue-600/10"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4 text-blue-500 dark:text-blue-400 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold leading-tight">1. Dashboard &amp; OLAP</p>
-              <p className="text-[10px] text-slate-500 truncate">KPI Eksekutif &amp; Kubus Data</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onTabChange("scoring")}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all ${
-              activeTab === "scoring"
-                ? "bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 shadow-sm dark:shadow-blue-600/10"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"
-            }`}
-          >
-            <UserCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold leading-tight">2. Scoring Debitur</p>
-              <p className="text-[10px] text-slate-500 truncate">FICO Hibrida &amp; SHAP</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onTabChange("stress-test")}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all ${
-              activeTab === "stress-test"
-                ? "bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/40 shadow-sm dark:shadow-blue-600/10"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"
-            }`}
-          >
-            <TrendingUp className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold leading-tight">3. Stress Testing</p>
-              <p className="text-[10px] text-slate-500 truncate">Prophet Makro CPO</p>
-            </div>
-          </button>
+        {/* Nav items */}
+        <div className="flex flex-col gap-1">
+          {navItems.map(({ id, label, sub, icon: Icon }) => {
+            const isActive = activeTab === id;
+            return (
+              <button
+                key={id}
+                onClick={() => onTabChange(id)}
+                className={cn(
+                  "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md text-left transition-all duration-150",
+                  isActive
+                    ? "bg-[var(--brand)] text-white shadow-sm"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-subtle)]"
+                )}
+              >
+                <Icon
+                  className={cn(
+                    "size-4 shrink-0",
+                    isActive ? "text-white" : "text-[var(--brand)]"
+                  )}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className={cn("text-xs font-semibold leading-tight", isActive ? "text-white" : "")}>
+                    {label}
+                  </p>
+                  <p className={cn("text-[10px] mt-0.5 truncate leading-tight", isActive ? "text-white/70" : "text-[var(--text-muted)]")}>
+                    {sub}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Status Sistem */}
-      <div className="glass-card rounded-2xl p-3 space-y-2">
-        <div className="flex items-center gap-1.5 pb-1.5 border-b border-slate-200 dark:border-white/5">
-          <Activity className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
-          <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Status Sistem</span>
+      {/* ── System Status Card ── */}
+      <div className="card p-3">
+        <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-[var(--divider)]">
+          <Cpu className="size-3.5 text-[var(--brand)]" />
+          <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">
+            Status Sistem
+          </span>
         </div>
-        <div className="space-y-1.5 text-[10px]">
+
+        <div className="flex flex-col gap-1.5 text-[10px]">
           <div className="flex items-center justify-between">
-            <span className="text-slate-600 dark:text-slate-400">API Backend</span>
-            <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+            <span className="text-[var(--text-muted)]">API Backend</span>
+            <span className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse-dot" />
               Aktif
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600 dark:text-slate-400">Model XGBoost</span>
-            <span className="text-slate-800 dark:text-slate-300 font-semibold">AUC 0.94</span>
+            <span className="text-[var(--text-muted)]">XGBoost</span>
+            <span className="font-semibold text-[var(--text-primary)] tabular-nums">AUC 0.94</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600 dark:text-slate-400">Kubus OLAP</span>
-            <span className="text-cyan-700 dark:text-cyan-400 font-semibold">Terintegrasi</span>
+            <span className="text-[var(--text-muted)]">Kubus OLAP</span>
+            <span className="font-semibold text-[var(--brand)]">Terintegrasi</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[var(--text-muted)]">Prophet</span>
+            <span className="font-semibold text-[var(--text-primary)] tabular-nums">MAPE 4.85%</span>
           </div>
         </div>
       </div>
+
+      {/* ── AI Model info ── */}
+      <div className="px-3 py-2.5 rounded-md bg-[var(--brand-subtle)] border border-[var(--brand-border)]">
+        <div className="flex items-center gap-1.5 mb-1">
+          <Activity className="size-3 text-[var(--brand)]" />
+          <span className="text-[10px] font-bold text-[var(--brand)] uppercase tracking-wider">CRISP-DM</span>
+        </div>
+        <p className="text-[10px] text-[var(--text-muted)] leading-relaxed">
+          Kerangka kerja ML & OLAP standar industri perbankan.
+        </p>
+      </div>
+
     </aside>
   );
 }

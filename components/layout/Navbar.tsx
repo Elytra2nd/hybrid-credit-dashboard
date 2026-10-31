@@ -1,14 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Layers, WifiOff, Bell, Sun, Moon } from "lucide-react";
+import { Landmark, WifiOff, Moon, Sun } from "lucide-react";
 import { checkApiHealth } from "@/lib/api";
 import { useTheme } from "@/context/ThemeContext";
-
-interface NavbarProps {
-  activeTab?: "kpi" | "scoring" | "stress-test";
-  onTabChange?: (tab: "kpi" | "scoring" | "stress-test") => void;
-}
 
 export default function Navbar() {
   const [isOnline, setIsOnline] = useState<boolean>(true);
@@ -25,97 +20,79 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-3">
-      <div className="max-w-7xl mx-auto glass-card rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-2xl">
-        {/* Logo & App Identity */}
+    <header className="sticky top-0 z-50 bg-[var(--sidebar-bg)] border-b border-[var(--sidebar-border)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+
+        {/* ── Logo & Identity ── */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 p-0.5 shadow-lg shadow-blue-500/30 flex items-center justify-center shrink-0">
-            <div className="w-full h-full bg-[#0D121F] rounded-[10px] flex items-center justify-center text-blue-400">
-              <Layers className="w-5 h-5 animate-pulse" />
-            </div>
+          {/* Brand icon: solid navy square, no gradient */}
+          <div className="size-9 rounded-lg bg-[var(--brand)] flex items-center justify-center shrink-0">
+            <Landmark className="size-4 text-white" strokeWidth={1.75} />
           </div>
-          <div>
+          <div className="leading-tight">
             <div className="flex items-center gap-2">
-              <h1 className="text-sm font-bold tracking-wider uppercase">
+              <h1 className="text-sm font-bold text-white tracking-tight">
                 Hybrid Credit DSS
               </h1>
-              <span className="bg-blue-500/20 text-blue-500 dark:text-blue-300 text-[10px] px-2 py-0.5 rounded-full border border-blue-400/30 font-semibold">
-                PRO
+              <span className="text-[10px] font-semibold text-[var(--navy-200)] bg-white/10 border border-white/15 px-1.5 py-0.5 rounded">
+                v2
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              PT Bina Area Persada &bull; Bank Kalbar
+            <p className="text-[11px] text-[var(--navy-300)] font-medium">
+              PT Bina Area Persada · Bank Kalbar
             </p>
           </div>
         </div>
 
-        {/* Right: Theme Switcher, API Status, Notifications, Profile */}
-        <div className="flex items-center gap-2.5">
-          {/* API Status Badge */}
+        {/* ── Right controls ── */}
+        <div className="flex items-center gap-2">
+
+          {/* API Status */}
           <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[11px] font-semibold border ${
               isOnline
-                ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/30"
-                : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-500/30"
+                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/25"
+                : "bg-rose-500/10 text-rose-400 border-rose-500/25"
             }`}
           >
             {isOnline ? (
               <>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="hidden sm:inline">FastAPI 8000 Live</span>
+                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
+                <span className="hidden sm:inline">FastAPI Live</span>
               </>
             ) : (
               <>
-                <WifiOff className="w-3 h-3 text-rose-400" />
-                <span className="hidden sm:inline">Backend Offline</span>
+                <WifiOff className="size-3" />
+                <span className="hidden sm:inline">Offline</span>
               </>
             )}
           </div>
 
-          {/* Theme On/Off Switch Toggle */}
+          {/* Theme toggle — clean pill switch */}
           <button
             onClick={toggleTheme}
             type="button"
             role="switch"
             aria-checked={theme === "dark"}
-            title={theme === "dark" ? "Mode Gelap aktif (Klik untuk Mode Terang)" : "Mode Terang aktif (Klik untuk Mode Gelap)"}
-            className={`relative inline-flex h-7 w-[52px] items-center rounded-full p-0.5 cursor-pointer transition-colors duration-300 border shadow-inner ${
-              theme === "dark"
-                ? "bg-[#090D16] border-blue-500/30 shadow-black/60"
-                : "bg-slate-200 border-slate-300 shadow-slate-300/50"
-            }`}
+            title={theme === "dark" ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap"}
+            className="relative flex items-center h-7 w-[52px] rounded-full cursor-pointer transition-colors duration-200 border border-white/15 bg-white/10 hover:bg-white/15"
           >
-            {/* Background Icons in Track */}
-            <div className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none">
-              <Sun className={`w-3.5 h-3.5 transition-opacity duration-200 ${theme === "light" ? "opacity-0" : "text-amber-400/50"}`} />
-              <Moon className={`w-3.5 h-3.5 transition-opacity duration-200 ${theme === "dark" ? "opacity-0" : "text-slate-400"}`} />
-            </div>
-
-            {/* Sliding Thumb Knob */}
             <span
-              className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-transform duration-300 ${
-                theme === "dark"
-                  ? "translate-x-6 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-blue-900/50"
-                  : "translate-x-0 bg-white text-amber-500 shadow-slate-400/40"
+              className={`absolute flex size-5 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                theme === "dark" ? "translate-x-[27px]" : "translate-x-[3px]"
               }`}
             >
               {theme === "dark" ? (
-                <Moon className="w-3.5 h-3.5 fill-current" />
+                <Moon className="size-3 text-[var(--navy-700)]" />
               ) : (
-                <Sun className="w-3.5 h-3.5 fill-current" />
+                <Sun className="size-3 text-[var(--navy-700)]" />
               )}
             </span>
           </button>
 
-          {/* Notification Bell */}
-          <div className="relative p-2 rounded-xl bg-slate-200/60 dark:bg-white/5 hover:bg-slate-300/60 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-300/60 dark:border-white/5 cursor-pointer transition">
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-[#0D121F]" />
-          </div>
-
-          {/* Profile Avatar */}
-          <div className="flex items-center gap-2 pl-1 border-l border-slate-300 dark:border-white/10">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center font-bold text-xs text-white shadow-md shadow-blue-600/30">
+          {/* Profile avatar */}
+          <div className="flex items-center gap-2 pl-2 border-l border-white/10">
+            <div className="size-8 rounded-lg bg-[var(--navy-600)] flex items-center justify-center font-bold text-xs text-white">
               BK
             </div>
           </div>

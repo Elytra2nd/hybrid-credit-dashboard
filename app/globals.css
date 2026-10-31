@@ -1,309 +1,333 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   HYBRID CREDIT DSS — Design System
+   Brand: Deep Corporate Navy (Bank Kalbar)
+   Architecture: 60/30/10 Rule — Light-first, data-readable, anti-AI-slop
+   Palette: Deep Navy primary · Slate neutrals · Semantic risk colors
+   ───────────────────────────────────────────────────────────────────────────── */
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
 
+/* ── 1. DESIGN TOKENS — CSS Variables ──────────────────────────────────────── */
+
 :root {
-  --bg-main: #070A10;
-  --text-main: #F8FAFC;
-  --card-bg: rgba(18, 24, 40, 0.75);
-  --card-deep-bg: rgba(13, 18, 35, 0.85);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-deep-border: rgba(255, 255, 255, 0.06);
-  --subtle-bg: rgba(13, 18, 31, 0.6);
-  --subtle-border: rgba(255, 255, 255, 0.05);
-  --surface-box: #0B0F19;
-  --surface-input: #131B2E;
-  --text-primary: #FFFFFF;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --chart-tooltip-bg: #0F172A;
-  --chart-tooltip-border: #334155;
-  --chart-grid: #1E293B;
-  --divider-color: rgba(255, 255, 255, 0.06);
+  /* Brand: Deep Corporate Navy (Bank Kalbar logo baseline) */
+  --navy-950: #0A1628;
+  --navy-900: #0D1F3C;
+  --navy-800: #112549;
+  --navy-700: #1A3560;
+  --navy-600: #1E407A; /* Primary brand — used SPARINGLY (10% rule) */
+  --navy-500: #254E96;
+  --navy-400: #3162B8;
+  --navy-300: #5A82CC;
+  --navy-200: #96B2E0;
+  --navy-100: #D0DEF2;
+  --navy-50:  #EDF2FA;
+
+  /* 60% Surface — clean whites for data legibility */
+  --bg-main:        #F8FAFC;   /* slate-50: off-white with cold blue tint */
+  --bg-page:        #FFFFFF;
+  --card-bg:        #FFFFFF;
+  --card-border:    #E2E8F0;   /* slate-200 */
+  --card-border-subtle: #EFF3F8;
+  --surface-input:  #FFFFFF;
+  --surface-subtle: #F1F5F9;   /* slate-100 */
+  --sidebar-bg:     #0D1F3C;   /* Dark Navy sidebar */
+  --sidebar-border: #1A3560;
+
+  /* 30% Structure — navy-tinted slate neutrals */
+  --text-primary:   #0F172A;   /* slate-900 */
+  --text-secondary: #334155;   /* slate-700 */
+  --text-muted:     #64748B;   /* slate-500 */
+  --text-disabled:  #94A3B8;   /* slate-400 */
+  --divider:        #E2E8F0;   /* slate-200 */
+
+  /* 10% Brand Primary — Navy accent */
+  --brand:          #1E407A;   /* primary navy */
+  --brand-hover:    #254E96;
+  --brand-fg:       #FFFFFF;
+  --brand-subtle:   rgba(30, 64, 122, 0.08);
+  --brand-border:   rgba(30, 64, 122, 0.20);
+
+  /* Chart palette — monochromatic Deep Navy scale (no neon) */
+  --chart-1: #1E407A;   /* Deep Navy */
+  --chart-2: #254E96;   /* Royal Blue */
+  --chart-3: #3B6CB5;   /* Steel Blue */
+  --chart-4: #5A82CC;   /* Slate Blue */
+  --chart-5: #96B2E0;   /* Light Navy */
+  --chart-historical: #1E407A;
+  --chart-projection: #5A82CC;
+
+  /* Semantic risk colors (separate from brand — never confuse) */
+  --risk-low-bg:    rgba(16, 185, 129, 0.08);
+  --risk-low-text:  #047857;   /* emerald-700 */
+  --risk-low-border: rgba(16, 185, 129, 0.20);
+
+  --risk-mid-bg:    rgba(245, 158, 11, 0.08);
+  --risk-mid-text:  #B45309;   /* amber-700 */
+  --risk-mid-border: rgba(245, 158, 11, 0.20);
+
+  --risk-high-bg:   rgba(244, 63, 94, 0.08);
+  --risk-high-text: #BE123C;   /* rose-700 */
+  --risk-high-border: rgba(244, 63, 94, 0.20);
+
+  /* Chart tooltip */
+  --chart-tooltip-bg:     #FFFFFF;
+  --chart-tooltip-border: #CBD5E1;
+  --chart-grid:           #E2E8F0;
 }
 
-[data-theme="light"] {
-  --bg-main: #F8FAFC;
-  --text-main: #0F172A;
-  --card-bg: #FFFFFF;
-  --card-deep-bg: #FFFFFF;
-  --card-border: #E2E8F0;
-  --card-deep-border: #CBD5E1;
-  --subtle-bg: #F1F5F9;
-  --subtle-border: #E2E8F0;
-  --surface-box: #F8FAFC;
-  --surface-input: #FFFFFF;
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
-  --chart-tooltip-bg: #FFFFFF;
-  --chart-tooltip-border: #CBD5E1;
-  --chart-grid: #E2E8F0;
-  --divider-color: #E2E8F0;
+/* ── Dark Mode Tokens ──────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-main:        #080E1C;
+  --bg-page:        #0A1220;
+  --card-bg:        rgba(14, 22, 38, 0.92);
+  --card-border:    rgba(255, 255, 255, 0.07);
+  --card-border-subtle: rgba(255, 255, 255, 0.04);
+  --surface-input:  #0F1A2E;
+  --surface-subtle: rgba(255, 255, 255, 0.03);
+  --sidebar-bg:     #060C18;
+  --sidebar-border: #0D1F3C;
+
+  --text-primary:   #F1F5F9;   /* slate-100 */
+  --text-secondary: #CBD5E1;   /* slate-300 */
+  --text-muted:     #64748B;   /* slate-500 */
+  --text-disabled:  #475569;   /* slate-600 */
+  --divider:        rgba(255, 255, 255, 0.06);
+
+  --brand:          #3162B8;   /* slightly lighter for dark bg contrast */
+  --brand-hover:    #3D73CC;
+  --brand-fg:       #FFFFFF;
+  --brand-subtle:   rgba(49, 98, 184, 0.15);
+  --brand-border:   rgba(49, 98, 184, 0.35);
+
+  --chart-1: #3162B8;
+  --chart-2: #4A77CC;
+  --chart-3: #5A82CC;
+  --chart-4: #7A9FD9;
+  --chart-5: #96B2E0;
+  --chart-historical: #3162B8;
+  --chart-projection: #7A9FD9;
+
+  --risk-low-bg:    rgba(16, 185, 129, 0.10);
+  --risk-low-text:  #34D399;
+  --risk-low-border: rgba(16, 185, 129, 0.25);
+
+  --risk-mid-bg:    rgba(245, 158, 11, 0.10);
+  --risk-mid-text:  #FCD34D;
+  --risk-mid-border: rgba(245, 158, 11, 0.25);
+
+  --risk-high-bg:   rgba(244, 63, 94, 0.10);
+  --risk-high-text: #FB7185;
+  --risk-high-border: rgba(244, 63, 94, 0.25);
+
+  --chart-tooltip-bg:     #0F172A;
+  --chart-tooltip-border: #1E293B;
+  --chart-grid:           #1E293B;
 }
+
+/* ── 2. BASE STYLES ─────────────────────────────────────────────────────────── */
 
 body {
   background-color: var(--bg-main);
-  color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Tabular numerics — applied broadly to financial data */
+.tabular-nums,
+[data-financial],
+table td {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
-::-webkit-scrollbar-track {
-  background: rgba(13, 18, 31, 0.5);
-}
+
+/* ── 3. SCROLLBAR — Restrained (no neon) ─────────────────────────────────── */
+
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(30, 64, 122, 0.20);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.6);
+  background: rgba(30, 64, 122, 0.35);
 }
 
-[data-theme="light"] ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.8);
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(49, 98, 184, 0.25);
 }
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.5);
-}
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.8);
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(49, 98, 184, 0.45);
 }
 
-/* Glassmorphism Card Utilities */
-.glass-card {
+/* ── 4. CARD SURFACE UTILITIES ──────────────────────────────────────────────── */
+
+/* Primary card: white surface, defined border, light shadow */
+.card {
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--card-border);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.5rem;       /* rounded-lg: 8px — structured, not bubbly */
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-[data-theme="light"] .glass-card {
-  background: #FFFFFF;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+.card:hover {
+  border-color: var(--brand-border);
+  box-shadow: 0 2px 8px 0 rgba(30, 64, 122, 0.08);
 }
 
-.glass-card-hover:hover {
-  border-color: rgba(96, 165, 250, 0.3);
-  box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+[data-theme="dark"] .card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.40), 0 1px 2px -1px rgba(0, 0, 0, 0.25);
 }
 
-[data-theme="light"] .glass-card-hover:hover {
-  border-color: #94A3B8;
-  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+[data-theme="dark"] .card:hover {
+  border-color: var(--brand-border);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.40);
+}
+
+/* Legacy glassmorphism aliases → remapped to clean card */
+.glass-card,
+.glass-card-deep {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .glass-card,
+[data-theme="dark"] .glass-card-deep {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.40);
 }
 
 .glass-panel-subtle {
-  background: var(--subtle-bg);
-  border: 1px solid var(--subtle-border);
+  background: var(--surface-subtle);
+  border: 1px solid var(--card-border-subtle);
+  border-radius: 0.375rem;
 }
 
-/* Deep glass card with spatial elevation */
-.glass-card-deep {
-  background: var(--card-deep-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--card-deep-border);
-  box-shadow:
-    0 32px 64px -16px rgba(0, 0, 0, 0.8),
-    0 8px 24px -8px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+[data-theme="dark"] .glass-panel-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
-[data-theme="light"] .glass-card-deep {
-  background: #FFFFFF;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+/* Sidebar surface */
+.sidebar-surface {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
 }
 
-/* 3D card perspective container */
-.perspective-card {
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.perspective-card:hover {
-  transform: translateY(-4px) rotateX(2deg);
-  box-shadow:
-    0 40px 80px -20px rgba(0, 0, 0, 0.8),
-    0 0 40px -10px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
+/* ── 5. RANK BADGES ────────────────────────────────────────────────────────── */
 
-[data-theme="light"] .perspective-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.08);
-}
+.rank-gold   { background: linear-gradient(135deg, #D4A017, #B8860B); }
+.rank-silver { background: linear-gradient(135deg, #94A3B8, #64748B); }
+.rank-bronze { background: linear-gradient(135deg, #CD7C2F, #92400E); }
 
-/* Glow effects */
-.neon-glow-blue {
-  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.4);
-}
-
-[data-theme="light"] .neon-glow-blue {
-  box-shadow: none;
-}
-
-/* Remove colored neon glow shadows in light mode to keep cards and buttons razor-sharp */
-[data-theme="light"] [class*="shadow-blue-"],
-[data-theme="light"] [class*="shadow-cyan-"],
-[data-theme="light"] [class*="shadow-indigo-"],
-[data-theme="light"] [class*="shadow-purple-"],
-[data-theme="light"] [class*="shadow-emerald-"] {
-  --tw-shadow-color: transparent !important;
-}
-
-/* ── Antigravity Design System Animations ───────────────────── */
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-6px); }
-}
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
+/* ── 6. ANIMATIONS ──────────────────────────────────────────────────────────── */
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-up {
-  animation: fadeUp 0.5s ease-out both;
-}
-
-@keyframes shimmerPulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.7; }
-}
-.animate-shimmer {
-  animation: shimmerPulse 2.5s ease-in-out infinite;
+  animation: fadeUp 0.35s ease-out both;
 }
 
 @keyframes fillBar {
   from { width: 0%; }
 }
 .animate-fill-bar {
-  animation: fillBar 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fillBar 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Rank badge gradient variants */
-.rank-gold   { background: linear-gradient(135deg, #F59E0B, #D97706); }
-.rank-silver { background: linear-gradient(135deg, #94A3B8, #64748B); }
-.rank-bronze { background: linear-gradient(135deg, #CD7C2F, #92400E); }
-
-/* ── Light Mode Color Overrides ────────────────────────────── */
-
-[data-theme="light"] .text-white {
-  color: #0F172A;
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.animate-pulse-dot {
+  animation: pulseDot 2s ease-in-out infinite;
 }
 
-/* Keep white text on solid/gradient buttons and badges */
-[data-theme="light"] button.text-white,
-[data-theme="light"] .bg-blue-600,
-[data-theme="light"] .bg-cyan-600,
-[data-theme="light"] .bg-gradient-to-r,
-[data-theme="light"] .bg-gradient-to-tr,
-[data-theme="light"] .bg-gradient-to-br,
-[data-theme="light"] .rank-gold,
-[data-theme="light"] .rank-silver,
-[data-theme="light"] .rank-bronze,
-[data-theme="light"] .preserve-white-text {
+/* ── 7. UTILITY CLASSES ─────────────────────────────────────────────────────── */
+
+/* Brand-tinted primary action button */
+.btn-primary {
+  background-color: var(--brand);
+  color: var(--brand-fg);
+  border: 1px solid transparent;
+  font-weight: 600;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover {
+  background-color: var(--brand-hover);
+  box-shadow: 0 4px 12px rgba(30, 64, 122, 0.25);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Subtle brand-tinted secondary button */
+.btn-secondary {
+  background-color: var(--brand-subtle);
+  color: var(--brand);
+  border: 1px solid var(--brand-border);
+  font-weight: 600;
+  transition: background-color 0.15s ease;
+}
+.btn-secondary:hover {
+  background-color: rgba(30, 64, 122, 0.14);
+}
+
+/* ── 8. FORM CONTROL RESETS ─────────────────────────────────────────────────── */
+
+input[type="date"],
+input[type="number"],
+input[type="text"],
+select,
+textarea {
+  background: var(--surface-input);
+  color: var(--text-primary);
+  border-color: var(--card-border);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(30, 64, 122, 0.12);
+}
+
+/* ── 9. LIGHT MODE NORMALIZATIONS ───────────────────────────────────────────── */
+/* Keep white text on solid navy buttons */
+[data-theme="light"] button.btn-primary,
+[data-theme="light"] .preserve-white {
   color: #FFFFFF !important;
 }
 
-[data-theme="light"] .text-slate-300 {
-  color: #334155;
+/* Mute neon glows on light backgrounds */
+[data-theme="light"] [class*="shadow-blue-"],
+[data-theme="light"] [class*="shadow-cyan-"],
+[data-theme="light"] [class*="shadow-indigo-"],
+[data-theme="light"] [class*="shadow-purple-"] {
+  --tw-shadow-color: transparent !important;
 }
 
-[data-theme="light"] .text-slate-400 {
-  color: #475569;
-}
-
-[data-theme="light"] .text-slate-500 {
-  color: #64748B;
-}
-
-[data-theme="light"] .border-white\/5,
-[data-theme="light"] .border-white\/10 {
-  border-color: rgba(226, 232, 240, 0.85);
-}
-
-[data-theme="light"] .bg-\[\#0B0F19\],
-[data-theme="light"] .bg-\[\#0B0F19\]\/80,
-[data-theme="light"] .bg-\[\#0B0F19\]\/90,
-[data-theme="light"] .bg-\[\#0B0F19\]\/60 {
-  background-color: #F1F5F9;
-  border-color: #E2E8F0;
-}
-
-[data-theme="light"] .bg-\[\#0D121F\] {
-  background-color: #FFFFFF;
-}
-
-[data-theme="light"] .bg-\[\#131B2E\] {
-  background-color: #FFFFFF;
-  border-color: #CBD5E1;
-  color: #0F172A;
-}
-
-[data-theme="light"] .bg-slate-900\/60 {
-  background-color: #F1F5F9;
-  color: #475569;
-}
-
-[data-theme="light"] .bg-slate-800\/60,
-[data-theme="light"] .bg-slate-800\/80,
-[data-theme="light"] .bg-slate-800 {
-  background-color: #E2E8F0;
-}
-
-[data-theme="light"] input,
-[data-theme="light"] select {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
-  border-color: #CBD5E1 !important;
-}
-
-[data-theme="light"] .text-emerald-300 {
-  color: #059669;
-}
-[data-theme="light"] .text-amber-300 {
-  color: #D97706;
-}
-[data-theme="light"] .text-rose-300 {
-  color: #E11D48;
-}
-[data-theme="light"] .text-cyan-400 {
-  color: #0284C7;
-}
-[data-theme="light"] .text-blue-300 {
-  color: #2563EB;
-}
-[data-theme="light"] .hover\:bg-white\/5:hover {
-  background-color: rgba(241, 245, 249, 0.8);
-}
-[data-theme="light"] .hover\:text-slate-200:hover {
-  color: #0F172A;
-}
-[data-theme="light"] .hover\:bg-white\/10:hover {
-  background-color: rgba(226, 232, 240, 0.8);
-}
-[data-theme="light"] .hover\:bg-white\/\[0\.03\]:hover {
-  background-color: rgba(241, 245, 249, 0.8);
+/* ── 10. BRAND ACCENT BAR (Section headers) ─────────────────────────────────── */
+.brand-accent-bar {
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--brand);
+  border-radius: 2px;
+  flex-shrink: 0;
 }

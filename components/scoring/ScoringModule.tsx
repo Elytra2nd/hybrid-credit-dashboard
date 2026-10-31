@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { DebtorInputPayload, DebtorScoreResult } from "@/types";
 import { scoreDebtor } from "@/lib/api";
+import { useState } from "react";
 import DebtorForm from "./DebtorForm";
 import FicoGauge from "./FicoGauge";
 import DecisionBadge from "./DecisionBadge";
 import ShapChart from "./ShapChart";
+import { ScanLine } from "lucide-react";
 
 export default function ScoringModule() {
   const [formData, setFormData] = useState<DebtorInputPayload>({
@@ -41,9 +43,7 @@ export default function ScoringModule() {
     ],
   });
 
-  const applyPreset = (type: "prime" | "risky") => {
-    // Handled in DebtorForm
-  };
+  const applyPreset = (_type: "prime" | "risky") => {};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,8 +68,28 @@ export default function ScoringModule() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div className="space-y-4 animate-fade-up">
+
+      {/* Section header */}
+      <div className="flex items-start gap-3 pb-1">
+        <span className="brand-accent-bar mt-0.5" />
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
+              Penilaian Kredit Debitur (FICO Hibrida)
+            </h2>
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)] px-1.5 py-0.5 rounded">
+              <ScanLine className="size-2.5" />
+              SHAP Explainability
+            </span>
+          </div>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+            Simulasi kelayakan kredit nasabah menggunakan model XGBoost terlatih (AUC 0.94)
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-5">
           <DebtorForm
             formData={formData}
@@ -80,14 +100,14 @@ export default function ScoringModule() {
           />
         </div>
 
-        <div className="space-y-4 lg:col-span-7">
+        <div className="flex flex-col gap-4 lg:col-span-7">
           {scoreResult && (
             <>
-              <div className="glass-card rounded-2xl p-5 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 dark:border-white/5 pb-3">
+              <div className="card rounded-lg p-4 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[var(--divider)] pb-3">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Hasil Penilaian</span>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white">Kelayakan Kredit Nasabah</h3>
+                    <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-widest">Hasil Penilaian</span>
+                    <h3 className="text-sm font-bold text-[var(--text-primary)] mt-0.5">Kelayakan Kredit Nasabah</h3>
                   </div>
                   <DecisionBadge
                     rekomendasi={scoreResult.rekomendasi_keputusan}
@@ -102,8 +122,8 @@ export default function ScoringModule() {
                   youdenThreshold={scoreResult.threshold_optimal_youden}
                 />
 
-                <div className="p-3 bg-slate-50 dark:bg-[#0B0F19]/90 border border-slate-200 dark:border-blue-500/20 rounded-xl text-xs text-slate-800 dark:text-slate-300 leading-relaxed">
-                  <span className="font-bold text-blue-600 dark:text-blue-400">Ringkasan: </span>
+                <div className="p-3 bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded-md text-xs text-[var(--text-secondary)] leading-relaxed">
+                  <span className="font-bold text-[var(--brand)]">Ringkasan: </span>
                   {scoreResult.keterangan_analisis}
                 </div>
               </div>

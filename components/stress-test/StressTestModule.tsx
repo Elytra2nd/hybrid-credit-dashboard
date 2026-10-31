@@ -6,6 +6,7 @@ import { runStressTestSimulation } from "@/lib/api";
 import ScenarioControls from "./ScenarioControls";
 import NplProjectionLine from "./NplProjectionLine";
 import ImpactCard from "./ImpactCard";
+import { FlaskConical } from "lucide-react";
 
 export default function StressTestModule() {
   const [params, setParams] = useState<StressTestRequestPayload>({
@@ -49,29 +50,28 @@ export default function StressTestModule() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Section Header */}
-      <div className="relative flex items-center justify-between animate-fade-up">
-        <div className="hidden dark:block absolute -left-8 -top-4 w-32 h-16 bg-blue-600/10 rounded-full blur-2xl pointer-events-none" />
+    <div className="space-y-4 animate-fade-up">
 
-        <div className="flex items-center gap-4 pl-4 border-l-2 border-indigo-500 relative z-10">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-white tracking-tight">
-                Pengujian Tekanan Makroekonomi &amp; Proyeksi NPL (Stress Testing)
-              </h2>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full">
-                Simulasi Makro
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Simulasi dampak guncangan harga komoditas sawit (CPO) terhadap dinamika rasio NPL regional dan daya serap kredit.
-            </p>
+      {/* Section header */}
+      <div className="flex items-start gap-3 pb-1">
+        <span className="brand-accent-bar mt-0.5" />
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
+              Pengujian Tekanan Makroekonomi &amp; Proyeksi NPL
+            </h2>
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)] px-1.5 py-0.5 rounded">
+              <FlaskConical className="size-2.5" />
+              Stress Testing
+            </span>
           </div>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+            Simulasi dampak guncangan harga komoditas sawit (CPO) terhadap dinamika rasio NPL regional
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-4">
           <ScenarioControls
             params={params}
