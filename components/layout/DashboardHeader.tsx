@@ -11,9 +11,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useTheme } from "@/context/ThemeContext";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { checkApiHealth } from "@/lib/api";
-import { Moon, Sun, WifiOff } from "lucide-react";
+import { WifiOff } from "lucide-react";
 
 interface DashboardHeaderProps {
   activeTab: "dashboard" | "scoring" | "stress-test";
@@ -27,7 +27,6 @@ const TAB_TITLES: Record<string, string> = {
 
 export default function DashboardHeader({ activeTab }: DashboardHeaderProps) {
   const [isOnline, setIsOnline] = useState<boolean>(true);
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     async function verify() {
@@ -75,8 +74,8 @@ export default function DashboardHeader({ activeTab }: DashboardHeaderProps) {
         <div
           className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-semibold border ${
             isOnline
-              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-              : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"
+              : "bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20"
           }`}
         >
           {isOnline ? (
@@ -92,20 +91,8 @@ export default function DashboardHeader({ activeTab }: DashboardHeaderProps) {
           )}
         </div>
 
-        {/* Theme Switcher Button */}
-        <button
-          onClick={toggleTheme}
-          type="button"
-          aria-label={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
-          title={theme === "dark" ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap"}
-          className="size-8 rounded-lg flex items-center justify-center border border-slate-200/80 dark:border-slate-800 bg-[var(--card-bg)] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-        >
-          {theme === "dark" ? (
-            <Sun className="size-4 text-amber-400" />
-          ) : (
-            <Moon className="size-4 text-slate-700" />
-          )}
-        </button>
+        {/* Animated Theme Toggle with Spring Micro-interaction */}
+        <ThemeToggle />
       </div>
     </header>
   );

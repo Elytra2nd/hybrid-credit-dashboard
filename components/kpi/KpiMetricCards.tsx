@@ -79,8 +79,8 @@ export default function KpiMetricCards({ data, dynamicMetrics }: KpiMetricCardsP
           ? dynamicMetrics?.sliceLabel || "Tersaring"
           : `+${formatPercent(data.pertumbuhan_yoy_persen, 1)} YoY`,
         badgeClass: isFiltered
-          ? "bg-[var(--brand-subtle)] text-[var(--brand)] border-[var(--brand-border)]"
-          : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+          ? "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700"
+          : "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
         sub: `${formatNumber(debiturVal, 0)} Nasabah`,
       },
     },
@@ -92,8 +92,8 @@ export default function KpiMetricCards({ data, dynamicMetrics }: KpiMetricCardsP
       footer: {
         badge: nplVal < 5.0 ? "Aman · OJK < 5%" : "Waspada",
         badgeClass: nplVal < 5.0
-          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-          : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20",
+          ? "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"
+          : "bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20",
         sub: "Toleransi 5,0%",
       },
     },
@@ -104,7 +104,7 @@ export default function KpiMetricCards({ data, dynamicMetrics }: KpiMetricCardsP
       delay: "120ms",
       footer: {
         badge: "Youden J = 0,463",
-        badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-200/80 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20",
         sub: "Protektif",
       },
     },
@@ -115,7 +115,7 @@ export default function KpiMetricCards({ data, dynamicMetrics }: KpiMetricCardsP
       delay: "180ms",
       footer: {
         badge: "PSAK 71",
-        badgeClass: "bg-[var(--brand-subtle)] text-[var(--brand)] border-[var(--brand-border)]",
+        badgeClass: "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700",
         sub: "Cadangan Kerugian",
       },
     },

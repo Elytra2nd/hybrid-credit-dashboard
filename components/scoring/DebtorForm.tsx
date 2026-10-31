@@ -149,10 +149,10 @@ export default function DebtorForm({
 
   const dtiClass = (dti: number) =>
     dti <= 0.38
-      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20"
+      ? "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20"
       : dti <= 0.50
-      ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20"
-      : "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20";
+      ? "bg-amber-50 text-amber-800 border-amber-200/80 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20"
+      : "bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20";
 
   return (
     <div className="card rounded-lg p-4 space-y-4">
@@ -179,7 +179,7 @@ export default function DebtorForm({
             <button
               type="button"
               onClick={() => applyProductPreset("prime")}
-              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center gap-1 transition"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/15 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-500/20 flex items-center justify-center gap-1 transition"
               title="Preset Prima Sehat (DTI ~23% → Disetujui)"
             >
               <CheckCircle2 className="size-3.5 shrink-0" />
@@ -188,7 +188,7 @@ export default function DebtorForm({
             <button
               type="button"
               onClick={() => applyProductPreset("max_excel")}
-              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-amber-500/10 hover:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/20 flex items-center justify-center gap-1 transition"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 dark:bg-amber-500/10 dark:hover:bg-amber-500/15 dark:text-amber-300 border border-amber-200/80 dark:border-amber-500/20 flex items-center justify-center gap-1 transition"
               title="Preset Plafon Maksimal (USEB / TIKA)"
             >
               <CreditCard className="size-3.5 shrink-0" />
@@ -197,7 +197,7 @@ export default function DebtorForm({
             <button
               type="button"
               onClick={() => applyProductPreset("risky")}
-              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-rose-500/10 hover:bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/20 flex items-center justify-center gap-1 transition"
+              className="text-[10.5px] font-semibold px-2 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-800 dark:bg-rose-500/10 dark:hover:bg-rose-500/15 dark:text-rose-300 border border-rose-200/80 dark:border-rose-500/20 flex items-center justify-center gap-1 transition"
               title="Preset Pinjaman Berisiko Tinggi"
             >
               <AlertTriangle className="size-3.5 shrink-0" />

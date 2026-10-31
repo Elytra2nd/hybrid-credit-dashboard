@@ -28,7 +28,7 @@ export default function ImpactCard({ result }: ImpactCardProps) {
           </h4>
           <p className={cn(
             "text-[10px] font-semibold mt-1",
-            nplSafe ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+            nplSafe ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"
           )}>
             {nplSafe ? "Di Bawah Batas OJK 5,00%" : "Melampaui Batas OJK!"}
           </p>
@@ -39,7 +39,7 @@ export default function ImpactCard({ result }: ImpactCardProps) {
           <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Koreksi Skor</p>
           <h4 className={cn(
             "text-2xl font-extrabold mt-1 tabular-nums",
-            adjPos ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+            adjPos ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"
           )}>
             {adjPos ? "+" : ""}{formatNumber(result.faktor_penyesuaian_skor_poin, 2)} poin
           </h4>

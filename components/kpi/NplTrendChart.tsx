@@ -90,7 +90,7 @@ export default function NplTrendChart({ data, currentNpl }: NplTrendChartProps) 
             ))}
           </div>
 
-          <span className="text-[11px] font-bold tabular-nums text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 whitespace-nowrap">
+          <span className="text-[11px] font-bold tabular-nums text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-200/80 dark:border-emerald-500/20 whitespace-nowrap">
             {formatPercent(currentNpl, 2)}
           </span>
         </div>

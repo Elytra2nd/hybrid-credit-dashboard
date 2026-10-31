@@ -27,83 +27,90 @@
   --navy-100: #D0DEF2;
   --navy-50:  #EDF2FA;
 
-  /* 60% Surface — clean whites for data legibility */
+  /* 60% Surface — Soft Layered Anti-Glare System */
   --bg-main:        #F8FAFC;   /* slate-50: off-white with cold blue tint */
-  --bg-page:        #FFFFFF;
-  --card-bg:        #FFFFFF;
-  --card-border:    #E2E8F0;   /* slate-200 */
+  --bg-page:        #F8FAFC;
+  --card-bg:        #FFFFFF;   /* Pure clean white on top of slate-50 */
+  --card-border:    rgba(226, 232, 240, 0.85); /* border-slate-200/80 */
   --card-border-subtle: #EFF3F8;
   --surface-input:  #FFFFFF;
   --surface-subtle: #F1F5F9;   /* slate-100 */
-  --sidebar-bg:     #0D1F3C;   /* Dark Navy sidebar */
-  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-bg:     #FFFFFF;   /* Clean white sidebar surface in Light Mode */
+  --sidebar-border: rgba(226, 232, 240, 0.85);
 
-  /* 30% Structure — navy-tinted slate neutrals */
-  --text-primary:   #0F172A;   /* slate-900 */
-  --text-secondary: #334155;   /* slate-700 */
-  --text-muted:     #64748B;   /* slate-500 */
-  --text-disabled:  #94A3B8;   /* slate-400 */
-  --divider:        #E2E8F0;   /* slate-200 */
+  /* 30% Structure — Deep Navy-Slate Neutrals (Balanced Readability WCAG AA) */
+  --text-primary:   #0F172A;   /* slate-900: Deep Slate Navy (sharp & comfortable) */
+  --text-secondary: #334155;   /* slate-700: Medium-Dark Slate (clear & readable) */
+  --text-muted:     #475569;   /* slate-600: High-contrast caption (> 4.5:1 ratio) */
+  --text-disabled:  #64748B;   /* slate-500 */
+  --divider:        rgba(226, 232, 240, 0.85); /* border-slate-200/80 */
 
   /* 10% Brand Primary — Navy accent */
-  --brand:          #1E407A;   /* primary navy */
+  --brand:          #1E407A;   /* primary deep corporate navy */
   --brand-hover:    #254E96;
   --brand-fg:       #FFFFFF;
   --brand-subtle:   rgba(30, 64, 122, 0.08);
   --brand-border:   rgba(30, 64, 122, 0.20);
 
-  /* Chart palette — monochromatic Deep Navy scale (no neon) */
-  --chart-1: oklch(0.87 0 0);   /* Deep Navy */
-  --chart-2: oklch(0.556 0 0);   /* Royal Blue */
-  --chart-3: oklch(0.439 0 0);   /* Steel Blue */
-  --chart-4: oklch(0.371 0 0);   /* Slate Blue */
-  --chart-5: oklch(0.269 0 0);   /* Light Navy */
+  /* Chart palette — monochromatic Deep Navy scale */
+  --chart-1: #1E407A;   /* Deep Navy */
+  --chart-2: #254E96;   /* Royal Blue */
+  --chart-3: #3B6CB5;   /* Steel Blue */
+  --chart-4: #5A82CC;   /* Slate Blue */
+  --chart-5: #96B2E0;   /* Light Navy */
   --chart-historical: #1E407A;
   --chart-projection: #5A82CC;
 
-  /* Semantic risk colors (separate from brand — never confuse) */
-  --risk-low-bg:    rgba(16, 185, 129, 0.08);
-  --risk-low-text:  #047857;   /* emerald-700 */
-  --risk-low-border: rgba(16, 185, 129, 0.20);
+  /* Semantic risk & status colors (Soft Tinted Light Mode) */
+  --risk-low-bg:    #ECFDF5;   /* emerald-50 */
+  --risk-low-text:  #065F46;   /* emerald-800 */
+  --risk-low-border: rgba(167, 243, 208, 0.8); /* emerald-200/80 */
 
-  --risk-mid-bg:    rgba(245, 158, 11, 0.08);
-  --risk-mid-text:  #B45309;   /* amber-700 */
-  --risk-mid-border: rgba(245, 158, 11, 0.20);
+  --risk-mid-bg:    #FFFBEB;   /* amber-50 */
+  --risk-mid-text:  #92400E;   /* amber-800 */
+  --risk-mid-border: rgba(253, 230, 138, 0.8); /* amber-200/80 */
 
-  --risk-high-bg:   rgba(244, 63, 94, 0.08);
-  --risk-high-text: #BE123C;   /* rose-700 */
-  --risk-high-border: rgba(244, 63, 94, 0.20);
+  --risk-high-bg:   #FFF1F2;   /* rose-50 */
+  --risk-high-text: #9F1239;   /* rose-800 */
+  --risk-high-border: rgba(254, 205, 211, 0.8); /* rose-200/80 */
+
+  --info-bg:        #F1F5F9;   /* slate-100 */
+  --info-text:      #1E293B;   /* slate-800 */
+  --info-border:    #E2E8F0;   /* slate-200 */
 
   /* Chart tooltip */
   --chart-tooltip-bg:     #FFFFFF;
   --chart-tooltip-border: #CBD5E1;
   --chart-grid:           #E2E8F0;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Shadcn UI Tokens (Light Mode Anti-Glare) */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #1E407A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: #475569;
+  --accent: #F1F5F9;
+  --accent-foreground: #0F172A;
+  --destructive: #E11D48;
+  --border: rgba(226, 232, 240, 0.85);
+  --input: rgba(226, 232, 240, 0.85);
+  --ring: #1E407A;
+  --radius: 0.5rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #1E407A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #0F172A;
+  --sidebar-border: rgba(226, 232, 240, 0.85);
+  --sidebar-ring: #1E407A;
 }
 
 /* ── Dark Mode Tokens ──────────────────────────────────────────────────────── */
@@ -120,8 +127,8 @@
 
   --text-primary:   #F1F5F9;   /* slate-100 */
   --text-secondary: #CBD5E1;   /* slate-300 */
-  --text-muted:     #64748B;   /* slate-500 */
-  --text-disabled:  #475569;   /* slate-600 */
+  --text-muted:     #94A3B8;   /* slate-400 */
+  --text-disabled:  #64748B;   /* slate-500 */
   --divider:        rgba(255, 255, 255, 0.06);
 
   --brand:          #3162B8;   /* slightly lighter for dark bg contrast */
@@ -138,21 +145,48 @@
   --chart-historical: #3162B8;
   --chart-projection: #7A9FD9;
 
-  --risk-low-bg:    rgba(16, 185, 129, 0.10);
+  --risk-low-bg:    rgba(16, 185, 129, 0.12);
   --risk-low-text:  #34D399;
   --risk-low-border: rgba(16, 185, 129, 0.25);
 
-  --risk-mid-bg:    rgba(245, 158, 11, 0.10);
+  --risk-mid-bg:    rgba(245, 158, 11, 0.12);
   --risk-mid-text:  #FCD34D;
   --risk-mid-border: rgba(245, 158, 11, 0.25);
 
-  --risk-high-bg:   rgba(244, 63, 94, 0.10);
+  --risk-high-bg:   rgba(244, 63, 94, 0.12);
   --risk-high-text: #FB7185;
   --risk-high-border: rgba(244, 63, 94, 0.25);
 
   --chart-tooltip-bg:     #0F172A;
   --chart-tooltip-border: #1E293B;
   --chart-grid:           #1E293B;
+
+  --background: #080E1C;
+  --foreground: #F1F5F9;
+  --card: #0E1626;
+  --card-foreground: #F1F5F9;
+  --popover: #0E1626;
+  --popover-foreground: #F1F5F9;
+  --primary: #3162B8;
+  --primary-foreground: #FFFFFF;
+  --secondary: #111E33;
+  --secondary-foreground: #F1F5F9;
+  --muted: #111E33;
+  --muted-foreground: #94A3B8;
+  --accent: #111E33;
+  --accent-foreground: #F1F5F9;
+  --destructive: #F43F5E;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #3162B8;
+  --sidebar: #060C18;
+  --sidebar-foreground: #F1F5F9;
+  --sidebar-primary: #3162B8;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #111E33;
+  --sidebar-accent-foreground: #F1F5F9;
+  --sidebar-border: #0D1F3C;
+  --sidebar-ring: #3162B8;
 }
 
 /* ── 2. BASE STYLES ─────────────────────────────────────────────────────────── */
@@ -404,37 +438,69 @@ textarea:focus {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #080E1C;
+  --foreground: #F1F5F9;
+  --card: #0E1626;
+  --card-foreground: #F1F5F9;
+  --popover: #0E1626;
+  --popover-foreground: #F1F5F9;
+  --primary: #3162B8;
+  --primary-foreground: #FFFFFF;
+  --secondary: #111E33;
+  --secondary-foreground: #F1F5F9;
+  --muted: #111E33;
+  --muted-foreground: #94A3B8;
+  --accent: #111E33;
+  --accent-foreground: #F1F5F9;
+  --destructive: #F43F5E;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #3162B8;
+  --chart-1: #3162B8;
+  --chart-2: #4A77CC;
+  --chart-3: #5A82CC;
+  --chart-4: #7A9FD9;
+  --chart-5: #96B2E0;
+  --sidebar: #060C18;
+  --sidebar-foreground: #F1F5F9;
+  --sidebar-primary: #3162B8;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #111E33;
+  --sidebar-accent-foreground: #F1F5F9;
+  --sidebar-border: #0D1F3C;
+  --sidebar-ring: #3162B8;
+}
+
+/* ── 11. SMOOTH GLOBAL THEME TRANSITION ─────────────────────────────────────── */
+html, body, .card, header, aside, main, nav, [data-slot="sidebar"], [data-slot="sidebar-inset"], table, th, td, input, select, textarea, button {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* ── 12. CIRCULAR VIEW TRANSITION (Theme Toggle) ────────────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: circular-reveal 400ms ease-in-out;
+}
+
+@keyframes circular-reveal {
+  from {
+    clip-path: circle(0px at var(--transition-x, 50%) var(--transition-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--transition-r, 150vmax) at var(--transition-x, 50%) var(--transition-y, 50%));
+  }
 }
 
 @layer base {

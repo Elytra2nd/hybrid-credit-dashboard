@@ -13,9 +13,9 @@ interface ScenarioControlsProps {
 }
 
 const SCENARIOS = [
-  { id: "Boom",     label: "Boom",     icon: TrendingUp,   colorActive: "text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border-emerald-500/30" },
+  { id: "Boom",     label: "Boom",     icon: TrendingUp,   colorActive: "text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200/80 dark:border-emerald-500/30" },
   { id: "Baseline", label: "Baseline", icon: Minus,         colorActive: "text-[var(--brand)] bg-[var(--brand-subtle)] border-[var(--brand-border)]" },
-  { id: "Crisis",   label: "Crisis",   icon: TrendingDown, colorActive: "text-rose-700 dark:text-rose-300 bg-rose-500/10 border-rose-500/30" },
+  { id: "Crisis",   label: "Crisis",   icon: TrendingDown, colorActive: "text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border-rose-200/80 dark:border-rose-500/30" },
 ] as const;
 
 export default function ScenarioControls({
@@ -34,9 +34,9 @@ export default function ScenarioControls({
   const shockPct = params.cpo_price_shock_pct;
   const shockColor =
     shockPct > 0
-      ? "text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border-emerald-500/20"
+      ? "text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200/80 dark:border-emerald-500/20"
       : shockPct < 0
-      ? "text-rose-700 dark:text-rose-300 bg-rose-500/10 border-rose-500/20"
+      ? "text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border-rose-200/80 dark:border-rose-500/20"
       : "text-[var(--text-muted)] bg-[var(--surface-subtle)] border-[var(--divider)]";
 
   return (

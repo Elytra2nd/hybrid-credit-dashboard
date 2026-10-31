@@ -24,6 +24,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
@@ -186,7 +187,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                 <ShieldCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
                 CRISP-DM Standard
               </span>
-              <span className="text-[9px] text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+              <span className="text-[9px] text-emerald-800 dark:text-emerald-300 font-semibold bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-200/80 dark:border-emerald-500/20">
                 Online
               </span>
             </div>
@@ -197,21 +198,24 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         </div>
       </SidebarContent>
 
-      {/* ── 3. FOOTER (Active User Profile) ── */}
+      {/* ── 3. FOOTER (Active User Profile & Theme Toggle) ── */}
       <SidebarFooter className="p-3 border-t border-[var(--divider)]">
-        <div className="flex items-center gap-2.5 p-1 rounded-lg">
-          <div className="size-8 rounded-full bg-[var(--brand-subtle)] text-[var(--brand)] border border-[var(--brand-border)] flex items-center justify-center text-xs font-bold shrink-0">
-            BK
+        <div className="flex items-center justify-between gap-2 p-1 rounded-lg">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="size-8 rounded-full bg-[var(--brand-subtle)] text-[var(--brand)] border border-[var(--brand-border)] flex items-center justify-center text-xs font-bold shrink-0">
+              BK
+            </div>
+            <div className="flex flex-col min-w-0 group-data-[collapsible=icon]:hidden">
+              <span className="text-xs font-bold text-[var(--text-primary)] truncate leading-tight">
+                Analis Kredit Senior
+              </span>
+              <span className="text-[10px] text-[var(--text-muted)] truncate flex items-center gap-1 leading-tight mt-0.5">
+                <span className="size-1.5 rounded-full bg-emerald-500 inline-block shrink-0" />
+                Divisi Manajemen Risiko
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col min-w-0 group-data-[collapsible=icon]:hidden">
-            <span className="text-xs font-bold text-[var(--text-primary)] truncate leading-tight">
-              Analis Kredit Senior
-            </span>
-            <span className="text-[10px] text-[var(--text-muted)] truncate flex items-center gap-1 leading-tight mt-0.5">
-              <span className="size-1.5 rounded-full bg-emerald-500 inline-block shrink-0" />
-              Divisi Manajemen Risiko
-            </span>
-          </div>
+          <ThemeToggle className="size-8 group-data-[collapsible=icon]:hidden shrink-0" />
         </div>
       </SidebarFooter>
 

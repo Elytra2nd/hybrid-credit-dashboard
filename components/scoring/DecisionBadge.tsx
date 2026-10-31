@@ -19,10 +19,10 @@ export default function DecisionBadge({ rekomendasi, kategori, score }: Decision
       className={cn(
         "flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold border",
         isApproved
-          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20"
+          ? "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20"
           : isReview
-          ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20"
-          : "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20"
+          ? "bg-amber-50 text-amber-800 border-amber-200/80 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20"
+          : "bg-rose-50 text-rose-800 border-rose-200/80 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20"
       )}
     >
       {isApproved ? (

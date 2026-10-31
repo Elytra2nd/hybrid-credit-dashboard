@@ -218,7 +218,7 @@ export default function KpiModule({ data }: KpiModuleProps) {
               <LayoutDashboard className="size-4 text-[var(--brand)] shrink-0" />
               Dashboard Eksekutif &amp; Analisis OLAP
             </h2>
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded mt-0.5">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/80 dark:border-emerald-500/20 px-1.5 py-0.5 rounded mt-0.5">
               <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse-dot" />
               Portofolio Terpadu
             </span>
